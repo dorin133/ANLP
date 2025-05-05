@@ -144,8 +144,8 @@ for model_name, model_path in models.items():
                 forward_output = model(output, output_attentions=True)
             
             output_path = f"attention_matrices/{model_name}_{dataset_name}_{i}_2shot.pt"
-            full_sequence_path = f"full_sequences/{model_name}_{dataset_name}_{i}_2shot.txt"
-            answers_path = f"generated_answers/{model_name}_{dataset_name}_{i}_2shot.txt"
+            full_sequence_path = f"full_sequences/{model_name}_{dataset_name}_{i}_2shot_full_sequence.txt"
+            answers_path = f"generated_answers/{model_name}_{dataset_name}_{i}_2shot_generated_answer.txt"
             
             # Save the entire sequence:
             with open(full_sequence_path, 'w', encoding="utf-8") as f:
