@@ -6,7 +6,7 @@ import json
 from datasets import concatenate_datasets
 import numpy as np
 
-# === Configuration ===
+# Configuration
 models = {
     "Qwen2.5-Math": "Qwen/Qwen2.5-Math-7B-Instruct",
     # "DeepSeek-R1": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B"
@@ -23,27 +23,40 @@ hendrycks_math_names = [
 
 datasets = {
     # "gsm8k": load_dataset("openai/gsm8k", "main", split="test"),
-        "math": {"dataset": concatenate_datasets(
-                        [
-                            load_dataset
+        "math-algebra": {
+                            "dataset": load_dataset
                             (
                                 "EleutherAI/hendrycks_math", 
-                                hendrycks_math_names[i], 
-                                split="test[:20]", 
+                                hendrycks_math_names[0], 
+                                split="test[:5]", 
                                 trust_remote_code=True
-                            ) 
-                            for i in range(len(hendrycks_math_names))
-                        ]
-                    ).shuffle(seed=42),
-                "config": "2-shot"
-            },
+                            ),
+                            "config": "2-shot"
+                        },
+        # "math-all": {
+        #                 "dataset": concatenate_datasets(
+        #                     [
+        #                         load_dataset
+        #                         (
+        #                             "EleutherAI/hendrycks_math", 
+        #                             hendrycks_math_names[i], 
+        #                             split="test[:5]", 
+        #                             trust_remote_code=True
+        #                         ) 
+        #                         for i in range(len(hendrycks_math_names))
+        #                     ]
+        #                 ).shuffle(seed=42),
+        #                 "config": "2-shot"
+        #             },
     # "aime2024": load_dataset("Maxwell-Jia/AIME_2024")  
 }
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 os.makedirs("attention_matrices", exist_ok=True)
+os.makedirs("full_sequences", exist_ok=True)
+os.makedirs("generated_answers", exist_ok=True)
 
-# === Attention hook function ===
+# Attention hook function
 attention_scores = {}
 
 def save_attention_hook(layer_id):
@@ -58,11 +71,11 @@ def save_attention_hook(layer_id):
             attention_scores[layer_id] = attn.detach().cpu()
     return hook
 
-# === Prepare Chain-of-Thought prompt ===
+# Prepare Chain-of-Thought prompt
 def prepare_prompt(example, dataset_name, shot_examples=None):
     if dataset_name == "gsm8k":
         return f"Q: {example['question']}\nLet's think step by step.\n"
-    elif dataset_name == "math":
+    elif "math" in dataset_name:
         if shot_examples:
             incontext = "\n".join(
                                     [f"Question: {ex['problem']}\nFull Solution: {ex['solution']}\n" 
@@ -80,12 +93,12 @@ for model_name, model_path in models.items():
     tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
                                                 model_path, 
-                                                output_attentions=True, 
-                                                return_dict_in_generate=True,
-                                                trust_remote_code=True,
-                                                torch_dtype=torch.float16,
+                                                # output_attentions=True, 
+                                                # return_dict_in_generate=True,
+                                                # trust_remote_code=True,
+                                                torch_dtype="auto",
                                                 # device_map="auto",
-                                                low_cpu_mem_usage=True,
+                                                # low_cpu_mem_usage=True,
                                                 # attn_implementation="flash_attention_2" 
                                             ).to('cuda:0')
     model.eval()
@@ -126,22 +139,35 @@ for model_name, model_path in models.items():
             with torch.no_grad():
                 output = model.generate(**inputs, 
                                 max_new_tokens=max(max(1024, model.config.max_position_embeddings-inputs['input_ids'].shape[1]),0),
-                                return_dict_in_generate=True,
-                                output_attentions=True,
-                                do_sample=False)
-
-            # Save attention scores
-            full_input_ids = output.sequences
+                            )
             with torch.no_grad():
-                forward_output = model(full_input_ids, output_attentions=True)
+                forward_output = model(output, output_attentions=True)
+            
+            output_path = f"attention_matrices/{model_name}_{dataset_name}_{i}_2shot.pt"
+            full_sequence_path = f"full_sequences/{model_name}_{dataset_name}_{i}_2shot.txt"
+            answers_path = f"generated_answers/{model_name}_{dataset_name}_{i}_2shot.txt"
+            
+            # Save the entire sequence:
+            with open(full_sequence_path, 'w', encoding="utf-8") as f:
+                full_sequence = tokenizer.decode(output[0], skip_special_tokens=True)
+                f.write(full_sequence)  
+                          
+            # Save the model's generated answer:
+            with open(answers_path, 'w', encoding="utf-8") as f:
+                generated_ids = [
+                            output_ids[len(input_ids):] for input_ids, output_ids in zip(inputs.input_ids, output)
+                        ]
+                answer = tokenizer.decode(generated_ids[0], skip_special_tokens=True)
+                f.write(answer)
+                
+            # Save attention scores
             attention_scores = forward_output["attentions"]
-            output_path = f"attention_matrices/{model_name}_{dataset_name}_{i}.pt"
-            torch.save(attention_scores, output_path)
-            print(f"Saved: {output_path}")
+            with open(output_path, 'wb') as f:
+                torch.save(attention_scores, f)
+            print(f"Saved: {full_sequence_path}")
+            
+            # Clear attention scores for the next example              
+            del attention_scores
+            attention_scores = {} 
 
-            # # Reset for next example
-            # attention_scores.clear()
 
-    # # Clean up hooks
-    # for h in hooks:
-    #     h.remove()
