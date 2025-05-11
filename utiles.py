@@ -1,6 +1,6 @@
 from transformers import AutoTokenizer
 
-def extract_assistant_thoughts_with_token_indices(file_path, model_name="Qwen2.5-Mat"):
+def extract_assistant_thoughts_with_token_indices(file_path, model_name="Qwen/Qwen2.5-Math-7B-Instruct"):
     """
     Extracts assistant's thoughts and their token index ranges using a tokenizer.
 
@@ -24,7 +24,7 @@ def extract_assistant_thoughts_with_token_indices(file_path, model_name="Qwen2.5
     except ValueError:
         raise ValueError("'assistant' keyword not found in the file.")
 
-    full_tokens = tokenizer.tokenize(content, add_special_tokens=False)
+    full_tokens = tokenizer.encode(content, add_special_tokens=False)
     full_encoded = tokenizer(content, return_offsets_mapping=True, add_special_tokens=False)
     offsets = full_encoded['offset_mapping']
 
