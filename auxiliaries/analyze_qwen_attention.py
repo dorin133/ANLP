@@ -8,7 +8,7 @@ from analp_functions_for_analysis import (
     calculate_thought_interaction,
     identify_salient_thoughts
 )
-from test_qwen_analysis import simple_tokenize, identify_thoughts, get_thought_text
+from auxiliaries.test_qwen_analysis import simple_tokenize, identify_thoughts, get_thought_text
 
 def load_compressed_pytorch(filepath):
     """Load a compressed PyTorch file (.pt.gz)"""

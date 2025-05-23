@@ -1,0 +1,79 @@
+To determine the value of \( p + q \), we first need to find the equation of the straight line that passes through the given points. The general form of a linear equation is \( y = mx + b \), where \( m \) is the slope and \( b \) is the y-intercept.
+
+First, we calculate the slope \( m \) using the points \((2, -5)\) and \((p+2, -17)\). The slope formula is:
+\[
+m = \frac{y_2 - y_1}{x_2 - x_1}
+\]
+Substituting the coordinates of the points, we get:
+\[
+m = \frac{-17 - (-5)}{(p+2) - 2} = \frac{-17 + 5}{p} = \frac{-12}{p}
+\]
+
+Next, we use the point \((2, -5)\) to find the y-intercept \( b \). Substituting \( x = 2 \) and \( y = -5 \) into the equation \( y = mx + b \), we get:
+\[
+-5 = \frac{-12}{p} \cdot 2 + b
+\]
+\[
+-5 = \frac{-24}{p} + b
+\]
+Solving for \( b \), we get:
+\[
+b = -5 + \frac{24}{p}
+\]
+
+Now we have the equation of the line:
+\[
+y = \frac{-12}{p}x - 5 + \frac{24}{p}
+\]
+
+We know that the point \((p, -14)\) lies on this line. Substituting \( x = p \) and \( y = -14 \) into the equation, we get:
+\[
+-14 = \frac{-12}{p} \cdot p - 5 + \frac{24}{p}
+\]
+\[
+-14 = -12 - 5 + \frac{24}{p}
+\]
+\[
+-14 = -17 + \frac{24}{p}
+\]
+Solving for \( p \), we get:
+\[
+-14 + 17 = \frac{24}{p}
+\]
+\[
+3 = \frac{24}{p}
+\]
+\[
+p = \frac{24}{3} = 8
+\]
+
+Now that we have \( p = 8 \), we substitute \( p = 8 \) back into the equation of the line to find \( q \). The point \((13, q)\) lies on the line, so we substitute \( x = 13 \) into the equation:
+\[
+y = \frac{-12}{8}x - 5 + \frac{24}{8}
+\]
+\[
+y = -\frac{3}{2}x - 5 + 3
+\]
+\[
+y = -\frac{3}{2}x - 2
+\]
+Substituting \( x = 13 \), we get:
+\[
+q = -\frac{3}{2} \cdot 13 - 2
+\]
+\[
+q = -\frac{39}{2} - 2
+\]
+\[
+q = -\frac{39}{2} - \frac{4}{2}
+\]
+\[
+q = -\frac{43}{2} = -21.5
+\]
+
+Finally, we find \( p + q \):
+\[
+p + q = 8 + (-21.5) = 8 - 21.5 = -13.5
+\]
+
+Thus, the value of \( p + q \) is \(\boxed{-13.5}\).

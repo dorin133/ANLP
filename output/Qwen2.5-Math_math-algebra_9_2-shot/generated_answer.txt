@@ -1,0 +1,43 @@
+Let the two numbers be \(3x\) and \(5x\), where \(3x\) is the lesser number and \(5x\) is the greater number. According to the problem, when 4 is subtracted from the lesser number and 8 is added to the greater number, the new ratio is \(2:7\). This can be expressed as:
+
+\[
+\frac{3x - 4}{5x + 8} = \frac{2}{7}
+\]
+
+To eliminate the fractions, we cross-multiply:
+
+\[
+7(3x - 4) = 2(5x + 8)
+\]
+
+Expanding both sides, we get:
+
+\[
+21x - 28 = 10x + 16
+\]
+
+Next, we isolate \(x\) by subtracting \(10x\) from both sides:
+
+\[
+11x - 28 = 16
+\]
+
+Then, we add 28 to both sides:
+
+\[
+11x = 44
+\]
+
+Finally, we solve for \(x\) by dividing both sides by 11:
+
+\[
+x = 4
+\]
+
+The greater of the two numbers before 8 is added to it is \(5x\). Substituting \(x = 4\) into \(5x\), we get:
+
+\[
+5x = 5 \cdot 4 = 20
+\]
+
+Thus, the greater of the two numbers before 8 is added to it is \(\boxed{20}\).

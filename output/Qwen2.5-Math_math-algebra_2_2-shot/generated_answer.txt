@@ -1,0 +1,15 @@
+To determine the domain of the function \( k(y) = \frac{1}{2y+1} \), we need to identify the values of \( y \) for which the function is defined. The function is undefined when the denominator is zero because division by zero is not allowed.
+
+Let's set the denominator equal to zero and solve for \( y \):
+\[ 2y + 1 = 0 \]
+Subtract 1 from both sides:
+\[ 2y = -1 \]
+Divide both sides by 2:
+\[ y = -\frac{1}{2} \]
+
+This tells us that the function \( k(y) \) is undefined at \( y = -\frac{1}{2} \). Therefore, the domain of \( k(y) \) is all real numbers except \( y = -\frac{1}{2} \).
+
+In interval notation, this is written as:
+\[ (-\infty, -\frac{1}{2}) \cup (-\frac{1}{2}, \infty) \]
+
+So, the domain of the function is \(\boxed{(-\infty, -\frac{1}{2}) \cup (-\frac{1}{2}, \infty)}\).

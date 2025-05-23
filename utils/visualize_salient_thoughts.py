@@ -14,44 +14,52 @@ def load_salient_thoughts(file_path):
         print(f"Error loading file {file_path}: {e}")
         return None
 
-def visualize_example(data, example_name, dataset_type, output_dir):
+def visualize_salient_thoughts(data, title, output_dir):
     """Create heatmap visualizations for a single example."""
     # Check data shape
     num_layers, num_heads, num_thoughts = data.shape
     
-    # Create a figure with subplots for each layer
-    fig, axes = plt.subplots(1, num_layers, figsize=(20, 5), sharey=True)
+    # Calculate number of rows needed (2 plots per row)
+    num_rows = (num_layers + 1) // 2  # Using integer division and ceiling
+    
+    # Create a figure with subplots arranged in multiple rows, 2 columns
+    fig, axes = plt.subplots(num_rows, 2, figsize=(15, 5 * num_rows), sharey=False)
     
     # Layer names (based on project description)
-    layer_names = ["Layer 1", "Layer 5", "Layer 9", "Layer 13", "Layer 17", "Layer 21", "Layer 25"]
+    layer_names = ["Layer 3", "Layer 7", "Layer 11", "Layer 15", "Layer 19", "Layer 23", "Layer 27"]
     
     # Create heatmaps for each layer
     for i in range(num_layers):
-        ax = axes[i]
+        # Calculate row and column position
+        row = i // 2
+        col = i % 2
+        
+        ax = axes[row, col]
         
         # Get data for this layer
         layer_data = data[i]
         
         # Plot heatmap
         sns.heatmap(layer_data, ax=ax, cmap="viridis", vmin=0, vmax=1,
-                   xticklabels=[f"Thought {j+1}" for j in range(num_thoughts)],
-                   yticklabels=[f"Head {j+1}" for j in range(num_heads)])
+                   xticklabels=[f"{j+1}" for j in range(num_thoughts)],
+                   yticklabels=[f"{j+1}" for j in range(num_heads)])
         
         # Set title and labels
         ax.set_title(layer_names[i])
-        if i == 0:
-            ax.set_ylabel("Attention Heads")
+        ax.set_ylabel("Attention Heads")
         ax.set_xlabel("Thoughts")
     
-    plt.suptitle(f"Salient Thoughts - {example_name}", fontsize=16)
+    # Hide any unused subplots
+    for i in range(num_layers, num_rows * 2):
+        row = i // 2
+        col = i % 2
+        fig.delaxes(axes[row, col])
+
+    plt.suptitle(title, fontsize=16, y=1.01)
     plt.tight_layout()
     
-    # Create dataset-specific output directory if it doesn't exist
-    dataset_output_dir = os.path.join(output_dir, dataset_type)
-    os.makedirs(dataset_output_dir, exist_ok=True)
-    
     # Save the figure
-    output_path = os.path.join(dataset_output_dir, f"{example_name}_salient_thoughts.png")
+    output_path = os.path.join(output_dir, f"salient_thoughts.png")
     plt.savefig(output_path, dpi=300, bbox_inches="tight")
     print(f"Saved visualization to {output_path}")
     
@@ -89,7 +97,7 @@ def process_all_examples(base_dir, output_dir="visualizations"):
             data = load_salient_thoughts(salient_file)
             
             if data is not None:
-                visualize_example(data, example_name, "aime", output_dir)
+                visualize_salient_thoughts(data, example_name, "aime", output_dir)
                 aime_count += 1
         else:
             print(f"No salient_thoughts.npy found in {example_dir}")
@@ -109,7 +117,7 @@ def process_all_examples(base_dir, output_dir="visualizations"):
             data = load_salient_thoughts(salient_file)
             
             if data is not None:
-                visualize_example(data, example_name, "math-algebra", output_dir)
+                visualize_salient_thoughts(data, example_name, "math-algebra", output_dir)
                 math_algebra_count += 1
         else:
             print(f"No salient_thoughts.npy found in {example_dir}")
@@ -129,14 +137,14 @@ def main():
     if args.example:
         # Process a single example
         # Determine dataset type from example name
-        dataset_type = "aime" if "aime" in args.example else "math-algebra"
+        dataset_name = "aime" if "aime" in args.example else "math-algebra"
         example_dir = os.path.join(args.base_dir, f"Qwen2.5-Math_{args.example}_2shot")
         salient_file = os.path.join(example_dir, "salient_thoughts.npy")
         
         if os.path.exists(salient_file):
             data = load_salient_thoughts(salient_file)
             if data is not None:
-                visualize_example(data, args.example, dataset_type, args.output_dir)
+                visualize_salient_thoughts(data, args.example, dataset_name, args.output_dir)
         else:
             print(f"File not found: {salient_file}")
     

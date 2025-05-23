@@ -1,0 +1,46 @@
+To find the largest value of \( f(x) - g(x) \), we need to analyze the graphs of the functions \( f(x) \) and \( g(x) \) and determine the maximum difference between their values over the domain \( 0 \le x \le 18 \).
+
+First, let's identify the points where the graphs intersect. By examining the graphs, we see that the two functions intersect at \( x = 6 \) and \( x = 10 \).
+
+Next, we will calculate \( f(x) - g(x) \) at these intersection points and at the endpoints of the domain \( x = 0 \) and \( x = 18 \).
+
+1. At \( x = 0 \):
+   \[
+   f(0) = 2 \quad \text{and} \quad g(0) = 2 \implies f(0) - g(0) = 2 - 2 = 0
+   \]
+
+2. At \( x = 6 \):
+   \[
+   f(6) = 8 \quad \text{and} \quad g(6) = 8 \implies f(6) - g(6) = 8 - 8 = 0
+   \]
+
+3. At \( x = 10 \):
+   \[
+   f(10) = 4 \quad \text{and} \quad g(10) = 8 \implies f(10) - g(10) = 4 - 8 = -4
+   \]
+
+4. At \( x = 18 \):
+   \[
+   f(18) = 12 \quad \text{and} \quad g(18) = 10 \implies f(18) - g(18) = 12 - 10 = 2
+   \]
+
+Now, we need to check the values of \( f(x) - g(x) \) in the intervals between the intersection points and the endpoints to ensure we have found the maximum value.
+
+- For \( 0 \le x < 6 \):
+  - \( f(x) \) is a horizontal line at \( y = 10 \).
+  - \( g(x) \) is a line with a positive slope from \( (0, 2) \) to \( (6, 8) \).
+  - The difference \( f(x) - g(x) \) starts at \( 10 - 2 = 8 \) and decreases to \( 10 - 8 = 2 \).
+
+- For \( 6 < x < 10 \):
+  - \( f(x) \) is a horizontal line at \( y = 4 \).
+  - \( g(x) \) is a horizontal line at \( y = 8 \).
+  - The difference \( f(x) - g(x) \) is \( 4 - 8 = -4 \).
+
+- For \( 10 < x \le 18 \):
+  - \( f(x) \) is a horizontal line at \( y = 12 \).
+  - \( g(x) \) is a horizontal line at \( y = 10 \).
+  - The difference \( f(x) - g(x) \) is \( 12 - 10 = 2 \).
+
+From the analysis, the maximum value of \( f(x) - g(x) \) occurs in the interval \( 0 \le x < 6 \) at \( x = 0 \), where \( f(x) - g(x) = 8 \).
+
+Therefore, the largest value of \( f(x) - g(x) \) is \(\boxed{8}\).

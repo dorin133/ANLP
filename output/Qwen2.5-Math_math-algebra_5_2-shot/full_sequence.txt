@@ -1,0 +1,48 @@
+system
+Please reason step by step, and put your final answer within \boxed{}.
+user
+Question: What is the domain of the function $$k(y) = \frac{1}{2y+1}~?$$ Express your answer in interval notation.
+Full Solution: The fraction $\frac{1}{2y+1}$ fails to be defined only if the denominator is zero. This occurs when $y$ is the solution of the equation $$2y+1=0,$$ which is $y=-\frac 12$. Thus the domain of $k(y)$ is $$\boxed{\left(-\infty,-\frac 12\right)\cup \left(-\frac 12,\infty\right)}.$$
+
+Question: Mike paid $\$1.25$ for a stamp three years ago. He was just offered double that amount for the stamp. Assuming the stamp's offer price doubles every three years, how many dollars will he be offered in 12 more years?
+Full Solution: The stamp is currently worth $\$2.50$. $12$ years is four more doubling periods, so at the end the stamp will be worth $2^4=16$ times what it is now, or
+
+$$16(\$2.50)=\boxed{\$40}$$
+
+Question: Find the sum of all values of $x$ such that $|x-1| = 7$.
+Full Solution:
+assistant
+To solve the equation \( |x-1| = 7 \), we need to consider the definition of the absolute value function. The absolute value equation \( |A| = B \) implies two possible cases:
+1. \( A = B \)
+2. \( A = -B \)
+
+In our equation, \( A = x-1 \) and \( B = 7 \). Therefore, we have two cases to consider:
+
+**Case 1: \( x-1 = 7 \)**
+
+To solve for \( x \), we add 1 to both sides of the equation:
+\[
+x - 1 + 1 = 7 + 1
+\]
+\[
+x = 8
+\]
+
+**Case 2: \( x-1 = -7 \)**
+
+To solve for \( x \), we add 1 to both sides of the equation:
+\[
+x - 1 + 1 = -7 + 1
+\]
+\[
+x = -6
+\]
+
+The solutions to the equation \( |x-1| = 7 \) are \( x = 8 \) and \( x = -6 \).
+
+Next, we find the sum of all these values:
+\[
+8 + (-6) = 8 - 6 = 2
+\]
+
+Thus, the sum of all values of \( x \) is \(\boxed{2}\).

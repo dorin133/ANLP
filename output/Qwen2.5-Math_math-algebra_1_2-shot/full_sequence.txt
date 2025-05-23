@@ -1,0 +1,51 @@
+system
+Please reason step by step, and put your final answer within \boxed{}.
+user
+Question: Find all positive integer values of $c$ such that the equation $x^2-7x+c=0$ only has roots that are real and rational. Express them in decreasing order, separated by commas.
+Full Solution: For the roots to be real and rational, the discriminant must be a perfect square. Therefore, $(-7)^2-4 \cdot 1 \cdot c = 49-4c$ must be a perfect square. The only positive perfect squares less than 49 are $1$, $4$, $9$, $16$, $25$, and $36$. The perfect squares that give a integer value of $c$ are $1$, $9$, and $25$. Thus, we have the equations $49-4c=1$, $49-4c=9$, and $49-4c=25$. Solving, we get that the positive integer values of c are $\boxed{12, 10, 6}$.
+
+Question: The points $(x, y)$ represented in this table lie on a straight line. The point $(13, q)$ lies on the same line. What is the value of $p + q?$ Express your answer as a decimal to the nearest tenth. $$\begin{array}{c|c}
+x & y \\ \hline
+2 & -5 \\
+p & -14 \\
+p+2 & -17 \\
+\end{array}$$
+Full Solution: If we have two points $(x_1,y_1)$ and $(x_2,y_2)$ on a line, we can find the slope of the line by using the formula $\dfrac{y_1-y_2}{x_1-x_2}.$ So, for the line we are given, the slope is $\dfrac{(-5)-(-14)}{2-p}=\dfrac{9}{2-p},$ and the slope is also $\dfrac{(-14)-(-17)}{p-(p+2)}=\dfrac{3}{-2}.$ Setting these values equal, we get $$\dfrac{9}{2-p}=-\dfrac{3}{2}.$$ Multiplying both sides by the product of the denominators and simplifying gives \begin{align*}
+(2-p)(3)&=(-2)(9)\\
+6-3p&=-18 \\
+p&=8.
+\end{align*} Now we need to find $q.$ Using the same strategy as above, we find that \begin{align*}
+\frac{q-(-5)}{13-2}&=\frac{3}{-2} \\
+(11)(3)&=(-2)(q+5)\\
+33&=-2q-10 \\
+q&=-21.5.\\
+\end{align*} Therefore, $p+q=8+(-21.5)=\boxed{-13.5}.$
+
+Question: Mike paid $\$1.25$ for a stamp three years ago. He was just offered double that amount for the stamp. Assuming the stamp's offer price doubles every three years, how many dollars will he be offered in 12 more years?
+Full Solution:
+assistant
+To determine how many dollars Mike will be offered in 12 more years, we need to follow these steps:
+
+1. **Initial Price**: Mike paid \$1.25 for the stamp three years ago.
+
+2. **First Doubling**: The stamp's price doubles every three years. Therefore, in the next three years (which is three years from now), the price will be:
+   \[
+   1.25 \times 2 = 2.50
+   \]
+
+3. **Second Doubling**: After another three years (which is six years from now), the price will double again:
+   \[
+   2.50 \times 2 = 5.00
+   \]
+
+4. **Third Doubling**: After another three years (which is nine years from now), the price will double again:
+   \[
+   5.00 \times 2 = 10.00
+   \]
+
+5. **Fourth Doubling**: After another three years (which is twelve years from now), the price will double again:
+   \[
+   10.00 \times 2 = 20.00
+   \]
+
+Thus, in 12 more years, Mike will be offered \(\boxed{20}\) dollars.

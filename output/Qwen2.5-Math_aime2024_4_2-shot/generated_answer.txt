@@ -1,0 +1,89 @@
+To solve the problem, we will use the principle of inclusion-exclusion. Let's define the following sets:
+- \( D \) is the set of residents who own a diamond ring.
+- \( G \) is the set of residents who own a set of golf clubs.
+- \( S \) is the set of residents who own a garden spade.
+- \( C \) is the set of residents who own a bag of candy hearts.
+
+We are given the following information:
+- \( |D| = 195 \)
+- \( |G| = 367 \)
+- \( |S| = 562 \)
+- \( |C| = 900 \)
+- The number of residents who own exactly two of these things is 437.
+- The number of residents who own exactly three of these things is 234.
+
+We need to find the number of residents who own all four of these things, denoted as \( |D \cap G \cap S \cap C| \).
+
+First, we use the principle of inclusion-exclusion for four sets:
+\[
+|D \cup G \cup S \cup C| = |D| + |G| + |S| + |C| - |D \cap G| - |D \cap S| - |D \cap C| - |G \cap S| - |G \cap C| - |S \cap C| + |D \cap G \cap S| + |D \cap G \cap C| + |D \cap S \cap C| + |G \cap S \cap C| - |D \cap G \cap S \cap C|
+\]
+
+We know that the total number of residents is 900, so:
+\[
+|D \cup G \cup S \cup C| = 900
+\]
+
+Next, we need to express the sums of the intersections in terms of the given information. Let:
+- \( x_2 \) be the number of residents who own exactly two of the items.
+- \( x_3 \) be the number of residents who own exactly three of the items.
+- \( x_4 \) be the number of residents who own all four of the items.
+
+From the problem, we have:
+\[
+x_2 = 437
+\]
+\[
+x_3 = 234
+\]
+
+We need to find \( x_4 \). To do this, we use the principle of inclusion-exclusion again, but this time focusing on the intersections:
+\[
+|D \cap G| + |D \cap S| + |D \cap C| + |G \cap S| + |G \cap C| + |S \cap C| = \binom{2}{2}x_2 + \binom{3}{2}x_3 + \binom{4}{2}x_4
+\]
+\[
+= x_2 + 3x_3 + 6x_4
+\]
+
+Substituting the known values:
+\[
+|D \cap G| + |D \cap S| + |D \cap C| + |G \cap S| + |G \cap C| + |S \cap C| = 437 + 3 \cdot 234 + 6x_4
+\]
+\[
+= 437 + 702 + 6x_4
+\]
+\[
+= 1139 + 6x_4
+\]
+
+Now, substitute this back into the inclusion-exclusion formula:
+\[
+900 = 195 + 367 + 562 + 900 - (1139 + 6x_4) + 234 - x_4
+\]
+
+Simplify the right-hand side:
+\[
+900 = 195 + 367 + 562 + 900 - 1139 - 6x_4 + 234 - x_4
+\]
+\[
+900 = 1623 - 7x_4
+\]
+
+Solve for \( x_4 \):
+\[
+7x_4 = 1623 - 900
+\]
+\[
+7x_4 = 723
+\]
+\[
+x_4 = \frac{723}{7}
+\]
+\[
+x_4 = 103
+\]
+
+Thus, the number of residents of Aimeville who own all four of these things is:
+\[
+\boxed{103}
+\]

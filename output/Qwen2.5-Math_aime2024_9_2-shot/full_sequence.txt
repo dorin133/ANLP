@@ -1,0 +1,49 @@
+system
+Please reason step by step, and put your final answer within \boxed{}.
+user
+Let's think step by step. Each thought should be separated by exactly two newline characters r'\n\n'.
+Question: Find the number of triples of nonnegative integers $(a,b,c)$ satisfying $a + b + c = 300$ and \[a^2b + a^2c + b^2a + b^2c + c^2a + c^2b = 6,000,000.\]
+Full Solution: $ab(a+b)+bc(b+c)+ac(a+c)=300(ab+bc+ac)-3abc=6000000, 100(ab+bc+ac)-abc=2000000$
+
+Note that $(100-a)(100-b)(100-c)=1000000-10000(a+b+c)+100(ab+bc+ac)-abc=0$. Thus, $a/b/c=100$. There are $201$ cases for each but we need to subtract $2$ for $(100,100,100)$. The answer is $\boxed{601}$.
+
+Question: Define $f(x)=|| x|-\tfrac{1}{2}|$ and $g(x)=|| x|-\tfrac{1}{4}|$. Find the number of intersections of the graphs of \[y=4 g(f(\sin (2 \pi x))) \quad\text{ and }\quad x=4 g(f(\cos (3 \pi y))).\]
+Full Solution: We will denote $h(x)=4g(f(x))$ for simplicity. Denote $p(x)$ as the first equation and $q(y)$ as the graph of the second. We notice that both $f(x)$ and $g(x)$ oscillate between 0 and 1. The intersections are thus all in the square $(0,0)$, $(0,1)$, $(1,1)$, and $(1,0)$. Every $p(x)$ wave going up and down crosses every $q(y)$ wave. Now, we need to find the number of times each wave touches 0 and 1.
+
+We notice that $h(x)=0$ occurs at $x=-\frac{3}{4}, -\frac{1}{4}, \frac{1}{4}, \frac{3}{4}$, and $h(x)=1$ occurs at $x=-1, -\frac{1}{2}, 0,\frac{1}{2},1$. A sinusoid passes through each point twice during each period, but it only passes through the extrema once. $p(x)$ has 1 period between 0 and 1, giving 8 solutions for $p(x)=0$ and 9 solutions for $p(x)=1$, or 16 up and down waves. $q(y)$ has 1.5 periods, giving 12 solutions for $q(y)=0$ and 13 solutions for $q(y)=1$, or 24 up and down waves. This amounts to $16\cdot24=384$ intersections.
+
+However, we have to be very careful when counting around $(1, 1)$. At this point, $q(y)$ has an infinite downwards slope and $p(x)$ is slanted, giving us an extra intersection; thus, we need to add 1 to our answer to get $\boxed{385}$.
+
+Question: Find the largest possible real part of \[(75+117i)z + \frac{96+144i}{z}\] where $z$ is a complex number with $|z|=4$.
+Full Solution:
+assistant
+Given the complex number \( z \) with \( |z| = 4 \), we can express \( z \) as \( z = 4e^{i\theta} \) for some real number \( \theta \). We need to find the maximum value of the real part of the expression \( (75+117i)z + \frac{96+144i}{z} \).
+
+First, substitute \( z = 4e^{i\theta} \) into the expression:
+\[
+(75+117i)z + \frac{96+144i}{z} = (75+117i)4e^{i\theta} + \frac{96+144i}{4e^{i\theta}} = 4(75+117i)e^{i\theta} + \frac{96+144i}{4}e^{-i\theta} = 4(75+117i)e^{i\theta} + (24+36i)e^{-i\theta}.
+\]
+
+Next, express \( e^{i\theta} \) and \( e^{-i\theta} \) in terms of sine and cosine:
+\[
+4(75+117i)e^{i\theta} = 4(75+117i)(\cos\theta + i\sin\theta) = 4(75\cos\theta + 117i\cos\theta + 75i\sin\theta - 117\sin\theta) = 300\cos\theta + 468i\cos\theta + 300i\sin\theta - 468\sin\theta,
+\]
+\[
+(24+36i)e^{-i\theta} = (24+36i)(\cos\theta - i\sin\theta) = 24\cos\theta - 24i\cos\theta + 36i\cos\theta + 36\sin\theta = 24\cos\theta + 12i\cos\theta + 36i\sin\theta + 36\sin\theta.
+\]
+
+Now, add these two expressions together:
+\[
+300\cos\theta + 468i\cos\theta + 300i\sin\theta - 468\sin\theta + 24\cos\theta + 12i\cos\theta + 36i\sin\theta + 36\sin\theta = (300\cos\theta + 24\cos\theta) + (468i\cos\theta + 12i\cos\theta) + (300i\sin\theta + 36i\sin\theta) + (-468\sin\theta + 36\sin\theta).
+\]
+Simplify the real and imaginary parts:
+\[
+324\cos\theta + 480i\cos\theta + 336i\sin\theta - 432\sin\theta = 324\cos\theta - 432\sin\theta + i(480\cos\theta + 336\sin\theta).
+\]
+
+The real part of this expression is \( 324\cos\theta - 432\sin\theta \). To find the maximum value of \( 324\cos\theta - 432\sin\theta \), we use the fact that the maximum value of \( a\cos\theta + b\sin\theta \) is \( \sqrt{a^2 + b^2} \). Here, \( a = 324 \) and \( b = -432 \), so:
+\[
+\sqrt{324^2 + (-432)^2} = \sqrt{324^2 + 432^2} = \sqrt{104976 + 186624} = \sqrt{291600} = 540.
+\]
+
+Therefore, the largest possible real part of \( (75+117i)z + \frac{96+144i}{z} \) is \( \boxed{540} \).

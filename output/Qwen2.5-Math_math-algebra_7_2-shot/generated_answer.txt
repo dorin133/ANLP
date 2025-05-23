@@ -1,0 +1,44 @@
+To determine the positive integer values of \( c \) such that the quadratic equation \( x^2 - 7x + c = 0 \) has real and rational roots, we need to ensure that the discriminant of the quadratic equation is a perfect square. The general form of a quadratic equation is \( ax^2 + bx + c = 0 \), and its discriminant is given by:
+
+\[
+\Delta = b^2 - 4ac
+\]
+
+For the given equation \( x^2 - 7x + c = 0 \), we have \( a = 1 \), \( b = -7 \), and \( c = c \). Substituting these values into the discriminant formula, we get:
+
+\[
+\Delta = (-7)^2 - 4 \cdot 1 \cdot c = 49 - 4c
+\]
+
+For the roots to be real and rational, the discriminant must be a non-negative perfect square. Therefore, we need:
+
+\[
+49 - 4c \geq 0
+\]
+
+Solving this inequality for \( c \):
+
+\[
+49 \geq 4c \implies c \leq \frac{49}{4} \implies c \leq 12.25
+\]
+
+Since \( c \) must be a positive integer, the possible values for \( c \) are \( 1, 2, 3, \ldots, 12 \). Next, we need to check which of these values make \( 49 - 4c \) a perfect square. We will test each value of \( c \):
+
+- For \( c = 1 \): \( 49 - 4 \cdot 1 = 45 \) (not a perfect square)
+- For \( c = 2 \): \( 49 - 4 \cdot 2 = 41 \) (not a perfect square)
+- For \( c = 3 \): \( 49 - 4 \cdot 3 = 37 \) (not a perfect square)
+- For \( c = 4 \): \( 49 - 4 \cdot 4 = 33 \) (not a perfect square)
+- For \( c = 5 \): \( 49 - 4 \cdot 5 = 29 \) (not a perfect square)
+- For \( c = 6 \): \( 49 - 4 \cdot 6 = 25 \) (perfect square, \( 25 = 5^2 \))
+- For \( c = 7 \): \( 49 - 4 \cdot 7 = 21 \) (not a perfect square)
+- For \( c = 8 \): \( 49 - 4 \cdot 8 = 17 \) (not a perfect square)
+- For \( c = 9 \): \( 49 - 4 \cdot 9 = 13 \) (not a perfect square)
+- For \( c = 10 \): \( 49 - 4 \cdot 10 = 9 \) (perfect square, \( 9 = 3^2 \))
+- For \( c = 11 \): \( 49 - 4 \cdot 11 = 5 \) (not a perfect square)
+- For \( c = 12 \): \( 49 - 4 \cdot 12 = 1 \) (perfect square, \( 1 = 1^2 \))
+
+The values of \( c \) that make \( 49 - 4c \) a perfect square are \( 6, 10, \) and \( 12 \). Therefore, the positive integer values of \( c \) such that the equation \( x^2 - 7x + c = 0 \) has real and rational roots are:
+
+\[
+\boxed{12, 10, 6}
+\]
