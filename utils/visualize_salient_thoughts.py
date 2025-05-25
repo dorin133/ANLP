@@ -70,7 +70,6 @@ def load_salient_thoughts(file_path):
 #     return output_path
 
 
-
 def visualize_salient_thoughts(data, title, output_dir):
     """Wrapper that prepares path and delegates to core heatmap function."""
     output_path = os.path.join(output_dir, "salient_thoughts.png")
@@ -81,10 +80,10 @@ def visualize_salient_thoughts(data, title, output_dir):
         xlabel="Thoughts",
         ylabel="Attention Heads",
         vmin=0,
-        vmax=1
-    )
+        vmax=1)
 
-def visualize_thoughts_analysis(data, title, output_dir, xlabel="Thoughts", ylabel="Attention Heads", vmin=False, vmax=False):
+
+def visualize_thoughts_analysis(data, title, output_dir, xlabel="Thoughts", ylabel="Attention Heads", vmin=None, vmax=None):
     """
     Create heatmap visualizations for a single example.
 
@@ -132,7 +131,7 @@ def visualize_thoughts_analysis(data, title, output_dir, xlabel="Thoughts", ylab
         col = i % 2
         fig.delaxes(axes[row, col])
 
-    plt.suptitle(title, fontsize=16, y=1.01)
+    plt.suptitle(title, fontsize=16, y=0.098)
     plt.tight_layout()
 
     # Save the figure
@@ -142,9 +141,6 @@ def visualize_thoughts_analysis(data, title, output_dir, xlabel="Thoughts", ylab
     plt.close(fig)
 
     return output_path
-
-
-
 
 
 def process_all_examples(base_dir, output_dir="visualizations"):
