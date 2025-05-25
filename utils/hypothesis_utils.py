@@ -223,6 +223,54 @@ def calculate_thought_interactions(attention_matrix, thoughts_token_map, current
         }
     return interaction_results
 
+def compute_mean_std(arr: np.ndarray):
+    """
+    Compute per-group mean and standard deviation over axis 1 of a (n, m, x, y) array.
+
+    Parameters:
+        arr (np.ndarray): Input array of shape (n, m, x, y)
+
+    Returns:
+        means (np.ndarray): Mean values of shape (n, x, y)
+        stds  (np.ndarray): Standard deviations of shape (n, x, y)
+    """
+    means = np.mean(arr, axis=1)  # Shape: (n, x, y)
+    stds = np.std(arr, axis=1)    # Shape: (n, x, y)
+    return means, stds
+
+
+def process_and_save_mean_std(path_to_npy: str):
+    """
+    Load a .npy file of shape (n, m, x, y), compute mean and std over axis=1,
+    and save the results as separate .npy files.
+
+    Parameters:
+        path_to_npy (str): Path to the input .npy file
+    """
+    # Load array
+    arr = np.load(path_to_npy)  # shape assumed to be (n, m, x, y)
+
+    # Validate shape
+    if arr.ndim != 4:
+        raise ValueError(f"Expected array of shape (n, m, x, y), got shape {arr.shape}")
+
+    # Compute mean and std along axis=1
+    means = np.mean(arr, axis=1)
+    stds = np.std(arr, axis=1)
+
+    # Build output file paths
+    base, _ = os.path.splitext(path_to_npy)
+    mean_path = f"{base}_mean_along_heads.npy"
+    std_path = f"{base}_std_along_heads.npy"
+
+    # Save results
+    np.save(mean_path, means)
+    np.save(std_path, stds)
+
+    print(f"✅ Saved mean to {mean_path}")
+    print(f"✅ Saved std to {std_path}")
+
+
 # Function to visually print the interactions comfortably
 def print_interactions(thought_idx, interactions, context_window):
     print(f"Thought interactions for thought {thought_idx}, and context window {context_window}:")

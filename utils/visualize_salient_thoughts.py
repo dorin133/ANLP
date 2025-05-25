@@ -14,41 +14,118 @@ def load_salient_thoughts(file_path):
         print(f"Error loading file {file_path}: {e}")
         return None
 
+
+# def visualize_salient_thoughts(data, title, output_dir):
+#     """Create heatmap visualizations for a single example."""
+#     # Check data shape
+#     num_layers, num_heads, num_thoughts = data.shape
+#
+#     # Calculate number of rows needed (2 plots per row)
+#     num_rows = (num_layers + 1) // 2  # Using integer division and ceiling
+#
+#     # Create a figure with subplots arranged in multiple rows, 2 columns
+#     fig, axes = plt.subplots(num_rows, 2, figsize=(15, 5 * num_rows), sharey=False)
+#
+#     # Layer names (based on project description)
+#     layer_names = ["Layer 3", "Layer 7", "Layer 11", "Layer 15", "Layer 19", "Layer 23", "Layer 27"]
+#
+#     # Create heatmaps for each layer
+#     for i in range(num_layers):
+#         # Calculate row and column position
+#         row = i // 2
+#         col = i % 2
+#
+#         ax = axes[row, col]
+#
+#         # Get data for this layer
+#         layer_data = data[i]
+#
+#         # Plot heatmap
+#         sns.heatmap(layer_data, ax=ax, cmap="viridis", vmin=0, vmax=1,
+#                     xticklabels=[f"{j + 1}" for j in range(num_thoughts)],
+#                     yticklabels=[f"{j + 1}" for j in range(num_heads)])
+#
+#         # Set title and labels
+#         ax.set_title(layer_names[i])
+#         ax.set_ylabel("Attention Heads")
+#         ax.set_xlabel("Thoughts")
+#
+#     # Hide any unused subplots
+#     for i in range(num_layers, num_rows * 2):
+#         row = i // 2
+#         col = i % 2
+#         fig.delaxes(axes[row, col])
+#
+#     plt.suptitle(title, fontsize=16, y=1.01)
+#     plt.tight_layout()
+#
+#     # Save the figure
+#     output_path = os.path.join(output_dir, f"salient_thoughts.png")
+#     plt.savefig(output_path, dpi=300, bbox_inches="tight")
+#     print(f"Saved visualization to {output_path}")
+#
+#     # Close the figure to free memory
+#     plt.close(fig)
+#
+#     return output_path
+
+
+
 def visualize_salient_thoughts(data, title, output_dir):
-    """Create heatmap visualizations for a single example."""
+    """Wrapper that prepares path and delegates to core heatmap function."""
+    output_path = os.path.join(output_dir, "salient_thoughts.png")
+    return visualize_thoughts_analysis(
+        data=data,
+        title=title,
+        output_dir=output_path,
+        xlabel="Thoughts",
+        ylabel="Attention Heads",
+        vmin=0,
+        vmax=1
+    )
+
+def visualize_thoughts_analysis(data, title, output_dir, xlabel="Thoughts", ylabel="Attention Heads", vmin=False, vmax=False):
+    """
+    Create heatmap visualizations for a single example.
+
+    Parameters:
+        data (np.ndarray): 3D array of shape (num_layers, num_heads, num_thoughts)
+        title (str): Title for the entire figure
+        output_dir (str): Directory to save the output image
+        xlabel (str): Label for x-axis (default: "Thoughts")
+        ylabel (str): Label for y-axis (default: "Attention Heads")
+    """
     # Check data shape
     num_layers, num_heads, num_thoughts = data.shape
-    
+
     # Calculate number of rows needed (2 plots per row)
-    num_rows = (num_layers + 1) // 2  # Using integer division and ceiling
-    
-    # Create a figure with subplots arranged in multiple rows, 2 columns
+    num_rows = (num_layers + 1) // 2  # ceiling division
+
+    # Create figure and axes
     fig, axes = plt.subplots(num_rows, 2, figsize=(15, 5 * num_rows), sharey=False)
-    
-    # Layer names (based on project description)
-    layer_names = ["Layer 3", "Layer 7", "Layer 11", "Layer 15", "Layer 19", "Layer 23", "Layer 27"]
-    
+
+    # Make axes 2D even if there's only one row
+    if num_rows == 1:
+        axes = np.expand_dims(axes, axis=0)
+
+    # Layer names (can be extended or passed as param)
+    layer_names = [f"Layer {i * 4 + 3}" for i in range(num_layers)]
+
     # Create heatmaps for each layer
     for i in range(num_layers):
-        # Calculate row and column position
         row = i // 2
         col = i % 2
-        
         ax = axes[row, col]
-        
-        # Get data for this layer
         layer_data = data[i]
-        
-        # Plot heatmap
-        sns.heatmap(layer_data, ax=ax, cmap="viridis", vmin=0, vmax=1,
-                   xticklabels=[f"{j+1}" for j in range(num_thoughts)],
-                   yticklabels=[f"{j+1}" for j in range(num_heads)])
-        
-        # Set title and labels
+
+        sns.heatmap(layer_data, ax=ax, cmap="viridis", vmin=vmin, vmax=vmax,
+                    xticklabels=[f"{j + 1}" for j in range(num_thoughts)],
+                    yticklabels=[f"{j + 1}" for j in range(num_heads)])
+
         ax.set_title(layer_names[i])
-        ax.set_ylabel("Attention Heads")
-        ax.set_xlabel("Thoughts")
-    
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
+
     # Hide any unused subplots
     for i in range(num_layers, num_rows * 2):
         row = i // 2
@@ -57,16 +134,18 @@ def visualize_salient_thoughts(data, title, output_dir):
 
     plt.suptitle(title, fontsize=16, y=1.01)
     plt.tight_layout()
-    
+
     # Save the figure
     output_path = os.path.join(output_dir, f"salient_thoughts.png")
     plt.savefig(output_path, dpi=300, bbox_inches="tight")
-    print(f"Saved visualization to {output_path}")
-    
-    # Close the figure to free memory
+    print(f"✅ Saved visualization to {output_path}")
     plt.close(fig)
-    
+
     return output_path
+
+
+
+
 
 def process_all_examples(base_dir, output_dir="visualizations"):
     """Process all examples in the array_logs directory, organized by dataset type."""
