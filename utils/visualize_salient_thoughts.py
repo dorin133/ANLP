@@ -82,6 +82,17 @@ def visualize_salient_thoughts(data, title, output_dir):
         vmin=0,
         vmax=1)
 
+def visualize_thoughts_interactions(data, title, output_path):
+    """Wrapper that prepares path and delegates to core heatmap function."""
+    return visualize_thoughts_analysis(
+        data=data,
+        title=title,
+        output_dir=output_path,
+        xlabel="Previous Thoughts Index",
+        ylabel="Current Thoughts Index",
+        vmin=0,
+        vmax=None)
+
 
 def visualize_thoughts_analysis(data, title, output_dir, xlabel="Thoughts", ylabel="Attention Heads", vmin=None, vmax=None):
     """
