@@ -1,0 +1,53 @@
+system
+Please reason step by step, and put your final answer within \boxed{}.
+user
+Let's think step by step. Each thought should be separated by exactly two newline characters r'\n\n'.
+Question: Below are the graphs of two functions, $f(x)$ and $g(x)$, defined on the domain $0\le x\le 18$:
+
+[asy]
+import graph; size(8cm); real lsf=0.5; pen dps=linewidth(0.7)+fontsize(10); defaultpen(dps); pen ds=black; real xmin=-1.5,xmax=18.5,ymin=-1.5,ymax=12.5;
+
+pen cqcqcq=rgb(0.75,0.75,0.75);
+
+/*grid*/ pen gs=linewidth(0.7)+cqcqcq+linetype("2 2"); real gx=1,gy=1;
+for(real i=ceil(xmin/gx)*gx;i<=floor(xmax/gx)*gx;i+=gx) draw((i,ymin)--(i,ymax),gs); for(real i=ceil(ymin/gy)*gy;i<=floor(ymax/gy)*gy;i+=gy) draw((xmin,i)--(xmax,i),gs);
+
+Label laxis; laxis.p=fontsize(10);
+
+xaxis("",xmin,xmax,Ticks(laxis,Step=2.0,Size=2,NoZero),Arrows(6),above=true); yaxis("",ymin,ymax,Ticks(laxis,Step=2.0,Size=2,NoZero),Arrows(6),above=true);
+draw((0,10)--(2,10)--(8,4)--(10,4)--(18,12),darkgreen+1.5);
+draw((0,2)--(6,8)--(10,8)--(12,10)--(18,10),orange+dashed+1.5);
+[/asy]
+
+If the graph of $f(x)$ is the dashed orange line, and the graph of $g(x)$ is the solid green line, what is the largest value of $f(x)-g(x)$?
+Full Solution: We can measure $|f(x)-g(x)|$ as the vertical distance between the two graphs at $x$. The sign of $f(x)-g(x)$ is positive if $f(x)>g(x)$, so we focus on the part of the graph where the dashed orange line lies above the solid dark green line. Within this part of the graph, the greatest vertical distance between the orange and green lines is $\boxed{4}$ (achieved for all $x$ from $8$ to $12$).
+
+Question: Find all positive integer values of $c$ such that the equation $x^2-7x+c=0$ only has roots that are real and rational. Express them in decreasing order, separated by commas.
+Full Solution: For the roots to be real and rational, the discriminant must be a perfect square. Therefore, $(-7)^2-4 \cdot 1 \cdot c = 49-4c$ must be a perfect square. The only positive perfect squares less than 49 are $1$, $4$, $9$, $16$, $25$, and $36$. The perfect squares that give a integer value of $c$ are $1$, $9$, and $25$. Thus, we have the equations $49-4c=1$, $49-4c=9$, and $49-4c=25$. Solving, we get that the positive integer values of c are $\boxed{12, 10, 6}$.
+
+Question: What is the domain of the function $$k(y) = \frac{1}{2y+1}~?$$ Express your answer in interval notation.
+Full Solution:
+assistant
+To determine the domain of the function \( k(y) = \frac{1}{2y+1} \), we need to identify the values of \( y \) for which the function is defined. The function is undefined when the denominator is zero because division by zero is not allowed. Therefore, we set the denominator equal to zero and solve for \( y \):
+
+\[
+2y + 1 = 0
+\]
+
+Subtract 1 from both sides:
+
+\[
+2y = -1
+\]
+
+Divide both sides by 2:
+
+\[
+y = -\frac{1}{2}
+\]
+
+This tells us that the function \( k(y) \) is undefined at \( y = -\frac{1}{2} \). Therefore, the domain of \( k(y) \) is all real numbers except \( y = -\frac{1}{2} \). In interval notation, this is written as:
+
+\[
+\boxed{(-\infty, -\frac{1}{2}) \cup (-\frac{1}{2}, \infty)}
+\]

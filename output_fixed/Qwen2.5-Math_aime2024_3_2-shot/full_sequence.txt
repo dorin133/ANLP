@@ -1,0 +1,63 @@
+system
+Please reason step by step, and put your final answer within \boxed{}.
+user
+Let's think step by step. Each thought should be separated by exactly two newline characters r'\n\n'.
+Question: Define $f(x)=|| x|-\tfrac{1}{2}|$ and $g(x)=|| x|-\tfrac{1}{4}|$. Find the number of intersections of the graphs of \[y=4 g(f(\sin (2 \pi x))) \quad\text{ and }\quad x=4 g(f(\cos (3 \pi y))).\]
+Full Solution: We will denote $h(x)=4g(f(x))$ for simplicity. Denote $p(x)$ as the first equation and $q(y)$ as the graph of the second. We notice that both $f(x)$ and $g(x)$ oscillate between 0 and 1. The intersections are thus all in the square $(0,0)$, $(0,1)$, $(1,1)$, and $(1,0)$. Every $p(x)$ wave going up and down crosses every $q(y)$ wave. Now, we need to find the number of times each wave touches 0 and 1.
+
+We notice that $h(x)=0$ occurs at $x=-\frac{3}{4}, -\frac{1}{4}, \frac{1}{4}, \frac{3}{4}$, and $h(x)=1$ occurs at $x=-1, -\frac{1}{2}, 0,\frac{1}{2},1$. A sinusoid passes through each point twice during each period, but it only passes through the extrema once. $p(x)$ has 1 period between 0 and 1, giving 8 solutions for $p(x)=0$ and 9 solutions for $p(x)=1$, or 16 up and down waves. $q(y)$ has 1.5 periods, giving 12 solutions for $q(y)=0$ and 13 solutions for $q(y)=1$, or 24 up and down waves. This amounts to $16\cdot24=384$ intersections.
+
+However, we have to be very careful when counting around $(1, 1)$. At this point, $q(y)$ has an infinite downwards slope and $p(x)$ is slanted, giving us an extra intersection; thus, we need to add 1 to our answer to get $\boxed{385}$.
+
+Question: Find the number of triples of nonnegative integers $(a,b,c)$ satisfying $a + b + c = 300$ and \[a^2b + a^2c + b^2a + b^2c + c^2a + c^2b = 6,000,000.\]
+Full Solution: $ab(a+b)+bc(b+c)+ac(a+c)=300(ab+bc+ac)-3abc=6000000, 100(ab+bc+ac)-abc=2000000$
+
+Note that $(100-a)(100-b)(100-c)=1000000-10000(a+b+c)+100(ab+bc+ac)-abc=0$. Thus, $a/b/c=100$. There are $201$ cases for each but we need to subtract $2$ for $(100,100,100)$. The answer is $\boxed{601}$.
+
+Question: Let $ABC$ be a triangle inscribed in circle $\omega$. Let the tangents to $\omega$ at $B$ and $C$ intersect at point $D$, and let $\overline{AD}$ intersect $\omega$ at $P$. If $AB=5$, $BC=9$, and $AC=10$, $AP$ can be written as the form $\frac{m}{n}$, where $m$ and $n$ are relatively prime integers. Find $m + n$.
+
+[asy] import olympiad;  unitsize(15);  pair A, B, C, D, E, F, P, O;  C = origin; A = (10,0); B = (7.8, 4.4899); draw(A--B--C--cycle); draw(A..B..C..cycle, red+dotted);  O = circumcenter(A, B, C);  E = rotate(90,B) * (O); F = rotate(90,C) * (O);  D = IP(B..E + (B-E)*4, C..F + (C-F)*-3);  draw(B--D--C--D--A);  P = IP(D..A, A..B..C);  dot(A); dot(B); dot(C); dot(D); dot(P); label("$A$", A, dir(335)); label("$B$", B, dir(65)); label("$C$", C, dir(200)); label("$D$", D, dir(135)); label("$P$", P, dir(235)); [/asy]
+Full Solution:
+assistant
+To solve for \(AP\) in the given triangle \(ABC\) inscribed in circle \(\omega\), we start by using the properties of the tangents and the power of a point.
+
+First, we note that \(D\) is the intersection of the tangents to \(\omega\) at \(B\) and \(C\). By the power of a point theorem, the power of point \(D\) with respect to \(\omega\) is equal to \(DB^2 = DC^2\). Since \(D\) is the intersection of the tangents, \(DB\) and \(DC\) are equal to the length of the tangent from \(D\) to \(\omega\).
+
+Next, we use the fact that \(AD\) is a symmedian of \(\triangle ABC\). The symmedian divides the opposite side in the ratio of the squares of the other two sides. Therefore, we have:
+\[
+\frac{BP}{PC} = \left(\frac{AB}{AC}\right)^2 = \left(\frac{5}{10}\right)^2 = \frac{1}{4}
+\]
+
+Let \(BP = x\) and \(PC = 4x\). Since \(P\) lies on \(AD\), we can use the power of a point theorem again to find \(AP\). The power of point \(A\) with respect to \(\omega\) is:
+\[
+AP \cdot AD = AB \cdot AC = 5 \cdot 10 = 50
+\]
+
+To find \(AD\), we use the formula for the length of the symmedian:
+\[
+AD^2 = AB \cdot AC \left(1 - \frac{BC^2}{(AB+AC)^2}\right)
+\]
+
+Substituting the given values:
+\[
+AD^2 = 5 \cdot 10 \left(1 - \frac{9^2}{(5+10)^2}\right) = 50 \left(1 - \frac{81}{225}\right) = 50 \left(1 - \frac{9}{25}\right) = 50 \left(\frac{16}{25}\right) = 32
+\]
+
+Thus, \(AD = \sqrt{32} = 4\sqrt{2}\).
+
+Now, we substitute \(AD = 4\sqrt{2}\) into the power of a point equation:
+\[
+AP \cdot 4\sqrt{2} = 50
+\]
+
+Solving for \(AP\):
+\[
+AP = \frac{50}{4\sqrt{2}} = \frac{25}{2\sqrt{2}} = \frac{25\sqrt{2}}{4}
+\]
+
+Therefore, \(AP\) can be written as \(\frac{m}{n}\) where \(m = 25\sqrt{2}\) and \(n = 4\). Since \(m\) and \(n\) are relatively prime integers, we need to rationalize \(m\). However, since \(m\) is already in its simplest form, we find \(m = 25\sqrt{2}\) and \(n = 4\).
+
+Thus, the final answer is:
+\[
+\boxed{601}
+\]

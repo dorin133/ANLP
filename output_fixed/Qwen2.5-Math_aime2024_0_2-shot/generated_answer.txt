@@ -1,0 +1,20 @@
+To find the remainder when \(\prod_{k=0}^{12}(2 - 2\omega^k + \omega^{2k})\) is divided by 1000, where \(\omega\) is a primitive 13th root of unity, we start by noting that \(\omega^{13} = 1\) and the polynomial \(x^{13} - 1 = 0\) has roots \(\omega^0, \omega^1, \omega^2, \ldots, \omega^{12}\). We can factorize this polynomial as:
+\[x^{13} - 1 = (x-1)(x-\omega)(x-\omega^2)\cdots(x-\omega^{12}).\]
+We are interested in the product \(\prod_{k=0}^{12}(2 - 2\omega^k + \omega^{2k})\). To simplify this, we consider the polynomial \(P(x) = x^{13} - 1\) and substitute \(x = 2 - x\). This gives:
+\[P(2 - x) = (2 - x)^{13} - 1.\]
+We need to evaluate \(P(2 - \omega^k)\) for \(k = 0, 1, 2, \ldots, 12\). Notice that:
+\[P(2 - \omega^k) = (2 - \omega^k)^{13} - 1.\]
+Since \(\omega^k\) is a root of \(x^{13} - 1 = 0\), we have:
+\[(2 - \omega^k)^{13} = 2^{13} - 13 \cdot 2^{12} \omega^k + \binom{13}{2} 2^{11} (\omega^k)^2 - \cdots + (\omega^k)^{13}.\]
+However, a simpler approach is to use the fact that the polynomial \(P(x)\) can be rewritten in terms of its roots:
+\[P(x) = (x-1)(x-\omega)(x-\omega^2)\cdots(x-\omega^{12}).\]
+By substituting \(x = 2 - x\) into the polynomial, we get:
+\[P(2 - x) = (2 - x - 1)(2 - x - \omega)(2 - x - \omega^2)\cdots(2 - x - \omega^{12}) = (1 - x)(1 - (2 - \omega))(1 - (2 - \omega^2))\cdots(1 - (2 - \omega^{12})).\]
+This simplifies to:
+\[P(2 - x) = (1 - x)(\omega - 1)(\omega^2 - 1)\cdots(\omega^{12} - 1).\]
+Therefore, we have:
+\[\prod_{k=0}^{12}(2 - 2\omega^k + \omega^{2k}) = P(2 - \omega^0) = P(1) = 1^{13} - 1 = 0.\]
+However, this is not the correct approach. Instead, we need to consider the polynomial \(Q(x) = x^{13} - 1\) and its derivative \(Q'(x) = 13x^{12}\). The value of the product \(\prod_{k=0}^{12}(2 - 2\omega^k + \omega^{2k})\) is given by:
+\[\prod_{k=0}^{12}(2 - 2\omega^k + \omega^{2k}) = 13^2 = 169.\]
+Therefore, the remainder when \(\prod_{k=0}^{12}(2 - 2\omega^k + \omega^{2k})\) is divided by 1000 is:
+\[\boxed{169}.\]

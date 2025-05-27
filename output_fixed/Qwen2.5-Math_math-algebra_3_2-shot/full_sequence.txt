@@ -1,0 +1,66 @@
+system
+Please reason step by step, and put your final answer within \boxed{}.
+user
+Let's think step by step. Each thought should be separated by exactly two newline characters r'\n\n'.
+Question: Simplify $(3-i)(6+2i)$.
+Full Solution: $(3-i)(6+2i) = 3(6) + 3(2i) -i(6) -i(2i) = 18+6i-6i +2 = \boxed{20}$.
+
+Question: Mike paid $\$1.25$ for a stamp three years ago. He was just offered double that amount for the stamp. Assuming the stamp's offer price doubles every three years, how many dollars will he be offered in 12 more years?
+Full Solution: The stamp is currently worth $\$2.50$. $12$ years is four more doubling periods, so at the end the stamp will be worth $2^4=16$ times what it is now, or
+
+$$16(\$2.50)=\boxed{\$40}$$
+
+Question: Ten treeks weigh as much as three squigs and one goolee. Two treeks and one goolee are equal in weight to one squig. The combined weight of how many treeks equals the weight of one squig?
+Full Solution:
+assistant
+To solve the problem, we need to set up a system of equations based on the given information. Let's define the variables:
+- \( T \) represents the weight of one treek.
+- \( S \) represents the weight of one squig.
+- \( G \) represents the weight of one goolee.
+
+From the problem, we have the following two equations:
+1. Ten treeks weigh as much as three squigs and one goolee:
+   \[
+   10T = 3S + G
+   \]
+2. Two treeks and one goolee are equal in weight to one squig:
+   \[
+   2T + G = S
+   \]
+
+We need to find the combined weight of how many treeks equals the weight of one squig. To do this, we will solve the system of equations for \( S \) in terms of \( T \).
+
+First, let's isolate \( G \) in the second equation:
+\[
+G = S - 2T
+\]
+
+Next, substitute \( G = S - 2T \) into the first equation:
+\[
+10T = 3S + (S - 2T)
+\]
+
+Simplify the right-hand side:
+\[
+10T = 3S + S - 2T
+\]
+\[
+10T = 4S - 2T
+\]
+
+Add \( 2T \) to both sides to combine the \( T \) terms:
+\[
+12T = 4S
+\]
+
+Divide both sides by 4 to solve for \( S \):
+\[
+S = 3T
+\]
+
+This tells us that one squig weighs as much as three treeks. Therefore, the combined weight of three treeks equals the weight of one squig.
+
+The final answer is:
+\[
+\boxed{3}
+\]

@@ -1,0 +1,51 @@
+system
+Please reason step by step, and put your final answer within \boxed{}.
+user
+Let's think step by step. Each thought should be separated by exactly two newline characters r'\n\n'.
+Question: The ratio of two numbers is $3:5$. When 4 is subtracted from the lesser of the two numbers and 8 is added to the larger of the two, the new ratio is $2:7$. What is the greater of the two numbers before 8 is added to it?
+Full Solution: Let $a$ be the smaller of the two numbers and let $b$ be the larger of the two. Then $\dfrac{a}{b}=\dfrac{3}{5}$, so $5a=3b$. Additionally, $\dfrac{a-4}{b+8}=\dfrac{2}{7}$, so cross multiplying gives $7(a-4)=2(b+8)$. We now have a system of two linear equations; solving gives $a=12$, $b=20$. Since the question asks us for the value of $b$, our answer is $\boxed{20}$.
+
+Question: Below are the graphs of two functions, $f(x)$ and $g(x)$, defined on the domain $0\le x\le 18$:
+
+[asy]
+import graph; size(8cm); real lsf=0.5; pen dps=linewidth(0.7)+fontsize(10); defaultpen(dps); pen ds=black; real xmin=-1.5,xmax=18.5,ymin=-1.5,ymax=12.5;
+
+pen cqcqcq=rgb(0.75,0.75,0.75);
+
+/*grid*/ pen gs=linewidth(0.7)+cqcqcq+linetype("2 2"); real gx=1,gy=1;
+for(real i=ceil(xmin/gx)*gx;i<=floor(xmax/gx)*gx;i+=gx) draw((i,ymin)--(i,ymax),gs); for(real i=ceil(ymin/gy)*gy;i<=floor(ymax/gy)*gy;i+=gy) draw((xmin,i)--(xmax,i),gs);
+
+Label laxis; laxis.p=fontsize(10);
+
+xaxis("",xmin,xmax,Ticks(laxis,Step=2.0,Size=2,NoZero),Arrows(6),above=true); yaxis("",ymin,ymax,Ticks(laxis,Step=2.0,Size=2,NoZero),Arrows(6),above=true);
+draw((0,10)--(2,10)--(8,4)--(10,4)--(18,12),darkgreen+1.5);
+draw((0,2)--(6,8)--(10,8)--(12,10)--(18,10),orange+dashed+1.5);
+[/asy]
+
+If the graph of $f(x)$ is the dashed orange line, and the graph of $g(x)$ is the solid green line, what is the largest value of $f(x)-g(x)$?
+Full Solution: We can measure $|f(x)-g(x)|$ as the vertical distance between the two graphs at $x$. The sign of $f(x)-g(x)$ is positive if $f(x)>g(x)$, so we focus on the part of the graph where the dashed orange line lies above the solid dark green line. Within this part of the graph, the greatest vertical distance between the orange and green lines is $\boxed{4}$ (achieved for all $x$ from $8$ to $12$).
+
+Question: Mike paid $\$1.25$ for a stamp three years ago. He was just offered double that amount for the stamp. Assuming the stamp's offer price doubles every three years, how many dollars will he be offered in 12 more years?
+Full Solution:
+assistant
+To determine how many dollars Mike will be offered in 12 more years, we need to follow these steps:
+
+1. Identify the initial price of the stamp three years ago.
+2. Determine the price of the stamp now.
+3. Calculate the price of the stamp in 12 more years, given that the price doubles every three years.
+
+First, we know that three years ago, Mike paid \$1.25 for the stamp. Therefore, the current price of the stamp is double the price he paid three years ago:
+\[
+2 \times 1.25 = 2.50 \text{ dollars}
+\]
+
+Next, we need to find out how many times the price will double in the next 12 years. Since the price doubles every three years, we divide 12 by 3:
+\[
+12 \div 3 = 4
+\]
+This means the price will double 4 times in the next 12 years. To find the price after 12 years, we multiply the current price by 2 four times:
+\[
+2.50 \times 2^4 = 2.50 \times 16 = 40 \text{ dollars}
+\]
+
+Therefore, the amount Mike will be offered in 12 more years is \(\boxed{40}\).

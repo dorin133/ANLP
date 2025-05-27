@@ -1,0 +1,82 @@
+system
+Please reason step by step, and put your final answer within \boxed{}.
+user
+Let's think step by step. Each thought should be separated by exactly two newline characters r'\n\n'.
+Question: Mike paid $\$1.25$ for a stamp three years ago. He was just offered double that amount for the stamp. Assuming the stamp's offer price doubles every three years, how many dollars will he be offered in 12 more years?
+Full Solution: The stamp is currently worth $\$2.50$. $12$ years is four more doubling periods, so at the end the stamp will be worth $2^4=16$ times what it is now, or
+
+$$16(\$2.50)=\boxed{\$40}$$
+
+Question: What is the domain of the function $$k(y) = \frac{1}{2y+1}~?$$ Express your answer in interval notation.
+Full Solution: The fraction $\frac{1}{2y+1}$ fails to be defined only if the denominator is zero. This occurs when $y$ is the solution of the equation $$2y+1=0,$$ which is $y=-\frac 12$. Thus the domain of $k(y)$ is $$\boxed{\left(-\infty,-\frac 12\right)\cup \left(-\frac 12,\infty\right)}.$$
+
+Question: Below are the graphs of two functions, $f(x)$ and $g(x)$, defined on the domain $0\le x\le 18$:
+
+[asy]
+import graph; size(8cm); real lsf=0.5; pen dps=linewidth(0.7)+fontsize(10); defaultpen(dps); pen ds=black; real xmin=-1.5,xmax=18.5,ymin=-1.5,ymax=12.5;
+
+pen cqcqcq=rgb(0.75,0.75,0.75);
+
+/*grid*/ pen gs=linewidth(0.7)+cqcqcq+linetype("2 2"); real gx=1,gy=1;
+for(real i=ceil(xmin/gx)*gx;i<=floor(xmax/gx)*gx;i+=gx) draw((i,ymin)--(i,ymax),gs); for(real i=ceil(ymin/gy)*gy;i<=floor(ymax/gy)*gy;i+=gy) draw((xmin,i)--(xmax,i),gs);
+
+Label laxis; laxis.p=fontsize(10);
+
+xaxis("",xmin,xmax,Ticks(laxis,Step=2.0,Size=2,NoZero),Arrows(6),above=true); yaxis("",ymin,ymax,Ticks(laxis,Step=2.0,Size=2,NoZero),Arrows(6),above=true);
+draw((0,10)--(2,10)--(8,4)--(10,4)--(18,12),darkgreen+1.5);
+draw((0,2)--(6,8)--(10,8)--(12,10)--(18,10),orange+dashed+1.5);
+[/asy]
+
+If the graph of $f(x)$ is the dashed orange line, and the graph of $g(x)$ is the solid green line, what is the largest value of $f(x)-g(x)$?
+Full Solution:
+assistant
+To determine the largest value of \( f(x) - g(x) \), we need to analyze the graphs of the functions \( f(x) \) and \( g(x) \) and find the maximum difference between their values over the domain \( 0 \le x \le 18 \).
+
+First, let's identify the key points on each graph:
+
+**Graph of \( f(x) \):**
+- \( f(x) \) starts at \( (0, 10) \) and remains constant at 10 from \( x = 0 \) to \( x = 2 \).
+- From \( x = 2 \) to \( x = 8 \), \( f(x) \) decreases linearly from 10 to 4.
+- From \( x = 8 \) to \( x = 10 \), \( f(x) \) remains constant at 4.
+- From \( x = 10 \) to \( x = 18 \), \( f(x) \) increases linearly from 4 to 12.
+
+**Graph of \( g(x) \):**
+- \( g(x) \) starts at \( (0, 2) \) and increases linearly to \( (6, 8) \).
+- From \( x = 6 \) to \( x = 10 \), \( g(x) \) remains constant at 8.
+- From \( x = 10 \) to \( x = 12 \), \( g(x) \) increases linearly from 8 to 10.
+- From \( x = 12 \) to \( x = 18 \), \( g(x) \) remains constant at 10.
+
+Next, we calculate \( f(x) - g(x) \) at each interval:
+
+1. **Interval \( 0 \le x < 2 \):**
+   - \( f(x) = 10 \)
+   - \( g(x) = 2 + \frac{6}{6}x = 2 + x \)
+   - \( f(x) - g(x) = 10 - (2 + x) = 8 - x \)
+   - Maximum value in this interval occurs at \( x = 0 \): \( 8 - 0 = 8 \)
+
+2. **Interval \( 2 \le x < 8 \):**
+   - \( f(x) = 10 - \frac{6}{6}(x - 2) = 10 - (x - 2) = 12 - x \)
+   - \( g(x) = 8 \)
+   - \( f(x) - g(x) = (12 - x) - 8 = 4 - x \)
+   - Maximum value in this interval occurs at \( x = 2 \): \( 4 - 2 = 2 \)
+
+3. **Interval \( 8 \le x < 10 \):**
+   - \( f(x) = 4 \)
+   - \( g(x) = 8 \)
+   - \( f(x) - g(x) = 4 - 8 = -4 \)
+
+4. **Interval \( 10 \le x < 12 \):**
+   - \( f(x) = 4 + \frac{6}{2}(x - 10) = 4 + 3(x - 10) = 4 + 3x - 30 = 3x - 26 \)
+   - \( g(x) = 8 \)
+   - \( f(x) - g(x) = (3x - 26) - 8 = 3x - 34 \)
+   - Maximum value in this interval occurs at \( x = 12 \): \( 3(12) - 34 = 36 - 34 = 2 \)
+
+5. **Interval \( 12 \le x \le 18 \):**
+   - \( f(x) = 4 + \frac{8}{2}(x - 10) = 4 + 4(x - 10) = 4 + 4x - 40 = 4x - 36 \)
+   - \( g(x) = 10 \)
+   - \( f(x) - g(x) = (4x - 36) - 10 = 4x - 46 \)
+   - Maximum value in this interval occurs at \( x = 18 \): \( 4(18) - 46 = 72 - 46 = 26 \)
+
+From the calculations above, the maximum value of \( f(x) - g(x) \) is 26, which occurs at \( x = 18 \).
+
+Thus, the largest value of \( f(x) - g(x) \) is \(\boxed{26}\).

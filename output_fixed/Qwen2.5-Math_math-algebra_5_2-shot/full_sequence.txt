@@ -1,0 +1,72 @@
+system
+Please reason step by step, and put your final answer within \boxed{}.
+user
+Let's think step by step. Each thought should be separated by exactly two newline characters r'\n\n'.
+Question: Below are the graphs of two functions, $f(x)$ and $g(x)$, defined on the domain $0\le x\le 18$:
+
+[asy]
+import graph; size(8cm); real lsf=0.5; pen dps=linewidth(0.7)+fontsize(10); defaultpen(dps); pen ds=black; real xmin=-1.5,xmax=18.5,ymin=-1.5,ymax=12.5;
+
+pen cqcqcq=rgb(0.75,0.75,0.75);
+
+/*grid*/ pen gs=linewidth(0.7)+cqcqcq+linetype("2 2"); real gx=1,gy=1;
+for(real i=ceil(xmin/gx)*gx;i<=floor(xmax/gx)*gx;i+=gx) draw((i,ymin)--(i,ymax),gs); for(real i=ceil(ymin/gy)*gy;i<=floor(ymax/gy)*gy;i+=gy) draw((xmin,i)--(xmax,i),gs);
+
+Label laxis; laxis.p=fontsize(10);
+
+xaxis("",xmin,xmax,Ticks(laxis,Step=2.0,Size=2,NoZero),Arrows(6),above=true); yaxis("",ymin,ymax,Ticks(laxis,Step=2.0,Size=2,NoZero),Arrows(6),above=true);
+draw((0,10)--(2,10)--(8,4)--(10,4)--(18,12),darkgreen+1.5);
+draw((0,2)--(6,8)--(10,8)--(12,10)--(18,10),orange+dashed+1.5);
+[/asy]
+
+If the graph of $f(x)$ is the dashed orange line, and the graph of $g(x)$ is the solid green line, what is the largest value of $f(x)-g(x)$?
+Full Solution: We can measure $|f(x)-g(x)|$ as the vertical distance between the two graphs at $x$. The sign of $f(x)-g(x)$ is positive if $f(x)>g(x)$, so we focus on the part of the graph where the dashed orange line lies above the solid dark green line. Within this part of the graph, the greatest vertical distance between the orange and green lines is $\boxed{4}$ (achieved for all $x$ from $8$ to $12$).
+
+Question: What is the domain of the function $$k(y) = \frac{1}{2y+1}~?$$ Express your answer in interval notation.
+Full Solution: The fraction $\frac{1}{2y+1}$ fails to be defined only if the denominator is zero. This occurs when $y$ is the solution of the equation $$2y+1=0,$$ which is $y=-\frac 12$. Thus the domain of $k(y)$ is $$\boxed{\left(-\infty,-\frac 12\right)\cup \left(-\frac 12,\infty\right)}.$$
+
+Question: Find the sum of all values of $x$ such that $|x-1| = 7$.
+Full Solution:
+assistant
+To solve the equation \( |x-1| = 7 \), we need to consider the definition of the absolute value function. The absolute value equation \( |A| = B \) implies two possible cases:
+1. \( A = B \)
+2. \( A = -B \)
+
+In our case, \( A = x-1 \) and \( B = 7 \). Therefore, we have two cases to consider:
+
+**Case 1: \( x-1 = 7 \)**
+
+Solve for \( x \):
+\[
+x - 1 = 7
+\]
+Add 1 to both sides:
+\[
+x = 7 + 1
+\]
+\[
+x = 8
+\]
+
+**Case 2: \( x-1 = -7 \)**
+
+Solve for \( x \):
+\[
+x - 1 = -7
+\]
+Add 1 to both sides:
+\[
+x = -7 + 1
+\]
+\[
+x = -6
+\]
+
+The solutions to the equation \( |x-1| = 7 \) are \( x = 8 \) and \( x = -6 \).
+
+To find the sum of all values of \( x \), we add these solutions together:
+\[
+8 + (-6) = 8 - 6 = 2
+\]
+
+Thus, the sum of all values of \( x \) is \(\boxed{2}\).

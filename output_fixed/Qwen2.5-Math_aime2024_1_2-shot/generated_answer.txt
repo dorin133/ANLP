@@ -1,0 +1,94 @@
+To find the radius \( r \) of the smallest sphere that can contain each rectangular box with surface area 54 and volume 23, we start by letting the dimensions of the box be \( a \), \( b \), and \( c \). The surface area and volume of the box are given by the equations:
+\[
+2(ab + bc + ca) = 54 \quad \text{and} \quad abc = 23.
+\]
+We need to find the radius \( r \) of the sphere that circumscribes the box, which is given by:
+\[
+r = \frac{\sqrt{a^2 + b^2 + c^2}}{2}.
+\]
+First, we express \( a^2 + b^2 + c^2 \) in terms of \( ab + bc + ca \) and \( abc \). Using the identity:
+\[
+(a + b + c)^2 = a^2 + b^2 + c^2 + 2(ab + bc + ca),
+\]
+we can solve for \( a^2 + b^2 + c^2 \):
+\[
+a^2 + b^2 + c^2 = (a + b + c)^2 - 2(ab + bc + ca).
+\]
+From the surface area equation, we know:
+\[
+ab + bc + ca = 27.
+\]
+Thus,
+\[
+a^2 + b^2 + c^2 = (a + b + c)^2 - 2 \cdot 27 = (a + b + c)^2 - 54.
+\]
+To minimize \( a^2 + b^2 + c^2 \), we need to find the minimum value of \( a + b + c \). Using the AM-GM inequality, we have:
+\[
+a + b + c \geq 3\sqrt[3]{abc} = 3\sqrt[3]{23}.
+\]
+However, we need to check if this minimum value is achievable. Let's assume \( a = b = c \). Then:
+\[
+3a^2 = 27 \implies a^2 = 9 \implies a = 3.
+\]
+Substituting \( a = b = c = 3 \) into the volume equation, we get:
+\[
+abc = 3 \cdot 3 \cdot 3 = 27,
+\]
+which is not equal to 23. Therefore, \( a = b = c \) is not a solution. Instead, we need to find the values of \( a \), \( b \), and \( c \) that satisfy both the surface area and volume equations and minimize \( a^2 + b^2 + c^2 \).
+
+We use the method of Lagrange multipliers. Define the function:
+\[
+f(a, b, c) = a^2 + b^2 + c^2,
+\]
+and the constraints:
+\[
+g(a, b, c) = 2(ab + bc + ca) - 54 = 0,
+\]
+\[
+h(a, b, c) = abc - 23 = 0.
+\]
+The gradients of \( f \), \( g \), and \( h \) are:
+\[
+\nabla f = (2a, 2b, 2c),
+\]
+\[
+\nabla g = (2(b+c), 2(a+c), 2(a+b)),
+\]
+\[
+\nabla h = (bc, ac, ab).
+\]
+Setting \(\nabla f = \lambda \nabla g + \mu \nabla h\), we get the system of equations:
+\[
+2a = \lambda \cdot 2(b+c) + \mu bc,
+\]
+\[
+2b = \lambda \cdot 2(a+c) + \mu ac,
+\]
+\[
+2c = \lambda \cdot 2(a+b) + \mu ab,
+\]
+\[
+2(ab + bc + ca) = 54,
+\]
+\[
+abc = 23.
+\]
+Simplifying the first three equations, we have:
+\[
+a = \lambda(b+c) + \frac{\mu bc}{2},
+\]
+\[
+b = \lambda(a+c) + \frac{\mu ac}{2},
+\]
+\[
+c = \lambda(a+b) + \frac{\mu ab}{2}.
+\]
+Subtracting the second equation from the first, we get:
+\[
+a - b = \lambda(b+c - a - c) + \frac{\mu bc - \mu ac}{2} \implies a - b = -\lambda(a - b) + \frac{\mu c(b - a)}{2} \implies (a - b)(1 + \lambda + \frac{\mu c}{2}) = 0.
+\]
+This implies either \( a = b \) or \( 1 + \lambda + \frac{\mu c}{2} = 0 \). Similarly, we can show that either \( b = c \) or \( 1 + \lambda + \frac{\mu a}{2} = 0 \), and either \( c = a \) or \( 1 + \lambda + \frac{\mu b}{2} = 0 \). Therefore, at least two of \( a \), \( b \), and \( c \) must be equal.
+
+Assume \( a = b \). Then the equations become:
+\[
+2a^2 + 2ac = 27 \implies a^2 + ac = \frac{27}{2},

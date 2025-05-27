@@ -1,0 +1,913 @@
+To solve the problem, we will use the principle of inclusion-exclusion. Let's define the following sets:
+- \( D \) is the set of residents who own a diamond ring.
+- \( G \) is the set of residents who own a set of golf clubs.
+- \( S \) is the set of residents who own a garden spade.
+- \( C \) is the set of residents who own a bag of candy hearts.
+
+We are given the following information:
+- \( |D| = 195 \)
+- \( |G| = 367 \)
+- \( |S| = 562 \)
+- \( |C| = 900 \)
+- The number of residents who own exactly two of these things is 437.
+- The number of residents who own exactly three of these things is 234.
+
+We need to find the number of residents who own all four of these things, denoted as \( |D \cap G \cap S \cap C| \).
+
+First, we use the principle of inclusion-exclusion for four sets:
+\[
+|D \cup G \cup S \cup C| = |D| + |G| + |S| + |C| - |D \cap G| - |D \cap S| - |D \cap C| - |G \cap S| - |G \cap C| - |S \cap C| + |D \cap G \cap S| + |D \cap G \cap C| + |D \cap S \cap C| + |G \cap S \cap C| - |D \cap G \cap S \cap C|
+\]
+
+We know that the total number of residents is 900:
+\[
+|D \cup G \cup S \cup C| = 900
+\]
+
+Next, we need to express the sums of the intersections in terms of the given information. Let:
+- \( x_2 \) be the number of residents who own exactly two items.
+- \( x_3 \) be the number of residents who own exactly three items.
+- \( x_4 \) be the number of residents who own all four items.
+
+From the problem, we have:
+\[
+x_2 = 437 \quad \text{and} \quad x_3 = 234
+\]
+
+The total number of residents can also be expressed as:
+\[
+|D \cup G \cup S \cup C| = \sum_{i=1}^{4} x_i
+\]
+
+However, this sum counts each resident who owns exactly two items twice, each resident who owns exactly three items three times, and each resident who owns all four items four times. Therefore, we need to adjust for these overcounts:
+\[
+|D \cup G \cup S \cup C| = x_1 + 2x_2 + 3x_3 + 4x_4
+\]
+
+Since \( x_1 = 0 \) (no resident owns exactly one item), we have:
+\[
+900 = 2x_2 + 3x_3 + 4x_4
+\]
+
+Substituting the given values:
+\[
+900 = 2(437) + 3(234) + 4x_4
+\]
+
+Calculate the terms:
+\[
+2(437) = 874
+\]
+\[
+3(234) = 702
+\]
+
+Add these values:
+\[
+874 + 702 = 1576
+\]
+
+Substitute back into the equation:
+\[
+900 = 1576 + 4x_4
+\]
+
+Solve for \( x_4 \):
+\[
+4x_4 = 900 - 1576
+\]
+\[
+4x_4 = -676
+\]
+\[
+x_4 = -676 + 1576
+]
+
+ correct }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ }
+
+
+
+
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+
+ |
+

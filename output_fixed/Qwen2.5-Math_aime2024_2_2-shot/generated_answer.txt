@@ -1,0 +1,26 @@
+To solve the problem, we start by analyzing the given equations:
+\[a + b + c = 300\]
+\[a^2b + a^2c + b^2a + b^2c + c^2a + c^2b = 6,000,000.\]
+
+First, we rewrite the second equation using the identity:
+\[a^2b + a^2c + b^2a + b^2c + c^2a + c^2b = (a+b+c)(ab+bc+ca) - 3abc.\]
+Substituting \(a + b + c = 300\) into the equation, we get:
+\[6,000,000 = 300(ab + bc + ca) - 3abc.\]
+Dividing both sides by 3, we obtain:
+\[2,000,000 = 100(ab + bc + ca) - abc.\]
+Rearranging the terms, we have:
+\[abc = 100(ab + bc + ca) - 2,000,000.\]
+
+Next, we consider the possible values of \(a\), \(b\), and \(c\). Since \(a\), \(b\), and \(c\) are nonnegative integers and their sum is 300, we can start by checking if any of them are zero. If \(a = 0\), then the equation simplifies to:
+\[b + c = 300\]
+\[0 = 100bc,\]
+which implies \(b = 0\) or \(c = 0\). Therefore, the solutions are \((0, 0, 300)\), \((0, 300, 0)\), and \((300, 0, 0)\). This gives us 3 solutions.
+
+Now, we assume that \(a\), \(b\), and \(c\) are all positive. We can use the AM-GM inequality to get some insight into the possible values of \(a\), \(b\), and \(c\). By the AM-GM inequality, we have:
+\[\frac{a+b+c}{3} \geq \sqrt[3]{abc} \implies 100 \geq \sqrt[3]{abc} \implies abc \leq 100^3 = 1,000,000.\]
+From the equation \(abc = 100(ab + bc + ca) - 2,000,000\), we know that \(abc\) must be greater than or equal to 2,000,000. Therefore, we have:
+\[2,000,000 \leq abc \leq 1,000,000,\]
+which is a contradiction. This means that \(a\), \(b\), and \(c\) cannot all be positive.
+
+Thus, the only solutions are \((0, 0, 300)\), \((0, 300, 0)\), and \((300, 0, 0)\). Therefore, the number of triples \((a, b, c)\) that satisfy the given equations is:
+\[\boxed{3}.\]

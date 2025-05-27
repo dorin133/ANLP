@@ -1,0 +1,21 @@
+To determine how many dollars Mike will be offered in 12 more years, we need to follow these steps:
+
+1. Identify the initial price of the stamp three years ago.
+2. Determine the price of the stamp now.
+3. Calculate the price of the stamp in 12 more years, given that the price doubles every three years.
+
+First, we know that three years ago, Mike paid \$1.25 for the stamp. Therefore, the current price of the stamp is double the price he paid three years ago:
+\[
+2 \times 1.25 = 2.50 \text{ dollars}
+\]
+
+Next, we need to find out how many times the price will double in the next 12 years. Since the price doubles every three years, we divide 12 by 3:
+\[
+12 \div 3 = 4
+\]
+This means the price will double 4 times in the next 12 years. To find the price after 12 years, we multiply the current price by 2 four times:
+\[
+2.50 \times 2^4 = 2.50 \times 16 = 40 \text{ dollars}
+\]
+
+Therefore, the amount Mike will be offered in 12 more years is \(\boxed{40}\).

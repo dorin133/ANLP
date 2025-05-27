@@ -1,0 +1,19 @@
+To find \( f^{-1}(f^{-1}(6)) \), we need to determine the value of \( f^{-1}(6) \) first. The inverse function \( f^{-1} \) is defined such that if \( f(a) = b \), then \( f^{-1}(b) = a \).
+
+Given:
+- \( f(1) = 2 \)
+- \( f(2) = 6 \)
+- \( f(3) = 5 \)
+
+From \( f(2) = 6 \), we can find \( f^{-1}(6) \):
+\[ f^{-1}(6) = 2 \]
+
+Next, we need to find \( f^{-1}(f^{-1}(6)) \), which is \( f^{-1}(2) \):
+- From \( f(1) = 2 \), we have \( f^{-1}(2) = 1 \)
+
+Therefore, \( f^{-1}(f^{-1}(6)) = 1 \).
+
+The final answer is:
+\[
+\boxed{1}
+\]

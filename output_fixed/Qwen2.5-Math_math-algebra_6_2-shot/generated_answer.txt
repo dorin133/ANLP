@@ -1,0 +1,50 @@
+To determine the largest value of \( f(x) - g(x) \), we need to analyze the graphs of the functions \( f(x) \) and \( g(x) \) and find the maximum difference between their values over the domain \( 0 \le x \le 18 \).
+
+First, let's identify the key points on each graph:
+
+**Graph of \( f(x) \):**
+- \( f(x) \) starts at \( (0, 10) \) and remains constant at 10 from \( x = 0 \) to \( x = 2 \).
+- From \( x = 2 \) to \( x = 8 \), \( f(x) \) decreases linearly from 10 to 4.
+- From \( x = 8 \) to \( x = 10 \), \( f(x) \) remains constant at 4.
+- From \( x = 10 \) to \( x = 18 \), \( f(x) \) increases linearly from 4 to 12.
+
+**Graph of \( g(x) \):**
+- \( g(x) \) starts at \( (0, 2) \) and increases linearly to \( (6, 8) \).
+- From \( x = 6 \) to \( x = 10 \), \( g(x) \) remains constant at 8.
+- From \( x = 10 \) to \( x = 12 \), \( g(x) \) increases linearly from 8 to 10.
+- From \( x = 12 \) to \( x = 18 \), \( g(x) \) remains constant at 10.
+
+Next, we calculate \( f(x) - g(x) \) at each interval:
+
+1. **Interval \( 0 \le x < 2 \):**
+   - \( f(x) = 10 \)
+   - \( g(x) = 2 + \frac{6}{6}x = 2 + x \)
+   - \( f(x) - g(x) = 10 - (2 + x) = 8 - x \)
+   - Maximum value in this interval occurs at \( x = 0 \): \( 8 - 0 = 8 \)
+
+2. **Interval \( 2 \le x < 8 \):**
+   - \( f(x) = 10 - \frac{6}{6}(x - 2) = 10 - (x - 2) = 12 - x \)
+   - \( g(x) = 8 \)
+   - \( f(x) - g(x) = (12 - x) - 8 = 4 - x \)
+   - Maximum value in this interval occurs at \( x = 2 \): \( 4 - 2 = 2 \)
+
+3. **Interval \( 8 \le x < 10 \):**
+   - \( f(x) = 4 \)
+   - \( g(x) = 8 \)
+   - \( f(x) - g(x) = 4 - 8 = -4 \)
+
+4. **Interval \( 10 \le x < 12 \):**
+   - \( f(x) = 4 + \frac{6}{2}(x - 10) = 4 + 3(x - 10) = 4 + 3x - 30 = 3x - 26 \)
+   - \( g(x) = 8 \)
+   - \( f(x) - g(x) = (3x - 26) - 8 = 3x - 34 \)
+   - Maximum value in this interval occurs at \( x = 12 \): \( 3(12) - 34 = 36 - 34 = 2 \)
+
+5. **Interval \( 12 \le x \le 18 \):**
+   - \( f(x) = 4 + \frac{8}{2}(x - 10) = 4 + 4(x - 10) = 4 + 4x - 40 = 4x - 36 \)
+   - \( g(x) = 10 \)
+   - \( f(x) - g(x) = (4x - 36) - 10 = 4x - 46 \)
+   - Maximum value in this interval occurs at \( x = 18 \): \( 4(18) - 46 = 72 - 46 = 26 \)
+
+From the calculations above, the maximum value of \( f(x) - g(x) \) is 26, which occurs at \( x = 18 \).
+
+Thus, the largest value of \( f(x) - g(x) \) is \(\boxed{26}\).

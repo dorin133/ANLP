@@ -1,0 +1,40 @@
+To simplify the expression \((3-i)(6+2i)\), we use the distributive property (also known as the FOIL method for binomials). This means we multiply each term in the first binomial by each term in the second binomial.
+
+Starting with \((3-i)(6+2i)\), we distribute as follows:
+\[
+(3-i)(6+2i) = 3 \cdot 6 + 3 \cdot 2i - i \cdot 6 - i \cdot 2i
+\]
+
+Next, we perform the multiplications:
+\[
+3 \cdot 6 = 18
+\]
+\[
+3 \cdot 2i = 6i
+\]
+\[
+-i \cdot 6 = -6i
+\]
+\[
+-i \cdot 2i = -2i^2
+\]
+
+Now, we combine these results:
+\[
+18 + 6i - 6i - 2i^2
+\]
+
+The terms \(6i\) and \(-6i\) cancel each other out, so we are left with:
+\[
+18 - 2i^2
+\]
+
+We know that \(i^2 = -1\), so we substitute \(-1\) for \(i^2\):
+\[
+18 - 2(-1) = 18 + 2 = 20
+\]
+
+Therefore, the simplified form of \((3-i)(6+2i)\) is:
+\[
+\boxed{20}
+\]
