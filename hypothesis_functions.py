@@ -160,15 +160,15 @@ def hypothesis_run(model: AutoModelForCausalLM,
                                                     for i in range(3, len(forward_output.attentions), 4)}
     thought_interaction_matrix_mean_topk_attn_scores = {i: {j: np.zeros((len(thoughts_token_map), len(thoughts_token_map))) for j in range(forward_output.attentions[0].shape[1])} \
                                                     for i in range(3, len(forward_output.attentions), 4)}
-    thought_interaction_matrix_mean_attn_scores_array = np.zeros((num_i, num_j, N, N))
-    thought_interaction_matrix_mean_topk_attn_scores_array = np.zeros((num_i, num_j, N, N))
-    
+    thought_interaction_matrix_mean_attn_scores_array = np.zeros((len(context_windows), num_i, num_j, N, N))
+    thought_interaction_matrix_mean_topk_attn_scores_array = np.zeros((len(context_windows), num_i, num_j, N, N))
+
     dict_result_all_context_windows = {}
     try:        
         # Initialize the dictionary for the current context window
         all_interactions = {context_window: {layer: {head: {} for head in range(forward_output.attentions[layer].shape[1])} for layer in range(3, len(forward_output.attentions), 4)} for context_window in context_windows}  # Initialize the dictionary for all interactions
         # draw stats for each context window
-        for context_window in context_windows: 
+        for context_window_idx, context_window in enumerate(context_windows): 
             for layer in range(3, len(forward_output.attentions), 4):
                 for head in range(forward_output.attentions[layer].shape[1]):
                     # Extract the attention matrix for the layer and head
@@ -191,12 +191,12 @@ def hypothesis_run(model: AutoModelForCausalLM,
                             if i > j:
                                 thought_interaction_matrix_mean_attn_scores[layer][head][i, j] = all_interactions[context_window][layer][head][i][j]['mean_all_scores_mean']
                                 thought_interaction_matrix_mean_topk_attn_scores[layer][head][i, j] = all_interactions[context_window][layer][head][i][j]['mean_top_k_scores_mean']
-                    thought_interaction_matrix_mean_attn_scores_array[layer//4, head] = thought_interaction_matrix_mean_attn_scores[layer][head]
-                    thought_interaction_matrix_mean_topk_attn_scores_array[layer//4, head] = thought_interaction_matrix_mean_topk_attn_scores[layer][head]
-            
-            dict_result_all_context_windows[context_window] = {'mean_all_scores': thought_interaction_matrix_mean_attn_scores_array, \
-                                                            'mean_top_k_scores': thought_interaction_matrix_mean_topk_attn_scores_array}
-        
+                    thought_interaction_matrix_mean_attn_scores_array[context_window_idx][layer//4, head] = thought_interaction_matrix_mean_attn_scores[layer][head]
+                    thought_interaction_matrix_mean_topk_attn_scores_array[context_window_idx][layer//4, head] = thought_interaction_matrix_mean_topk_attn_scores[layer][head]
+
+            dict_result_all_context_windows[context_window] = {'mean_all_scores': thought_interaction_matrix_mean_attn_scores_array[context_window_idx], \
+                                                            'mean_top_k_scores': thought_interaction_matrix_mean_topk_attn_scores_array[context_window_idx]}
+
     finally: 
         # Restore original stdout and close log file
         restore_logging(original_stdout, log_file)

@@ -2,12 +2,14 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from datasets import load_dataset
 import os
+import seaborn as sns
 import json
 from datasets import concatenate_datasets
 import numpy as np
 from hypothesis_functions import hypothesis_run, init_output_dir
+from utils.hypothesis_utils import process_and_save_mean_std
 import matplotlib.pyplot as plt
-from utils.visualize_salient_thoughts import visualize_salient_thoughts
+from utils.visualize_salient_thoughts import visualize_thoughts_interactions, visualize_salient_thoughts
 import copy
 
 # parse arguments from the .sh script passed to main.py
@@ -16,13 +18,13 @@ parser = argparse.ArgumentParser(description="Run the model with specified param
 parser.add_argument(
     "--max_new_tokens", 
     type=int, 
-    default=1200, 
+    default=1024, 
     help="Maximum number of new tokens to generate."
 )
 parser.add_argument(
     "--output_dir",
     type=str,
-    default="./output",
+    default="./output_fixed",
     help="Directory to save all outputs of the current run."
 )
 parser.add_argument(
@@ -85,7 +87,7 @@ datasets = {
                                     trust_remote_code=True
                                 )
                             ]
-                        ).shuffle(seed=42).select(np.arange(args.num_samples_per_task)),
+                        ).shuffle(seed=7).select(np.arange(args.num_samples_per_task)),
                         "config": "2-shot"
                     },
 }
@@ -241,22 +243,20 @@ for model_name, model_path in models.items():
                         result.dict_result_all_context_windows[context_window]['mean_all_scores'])
                     np.save(os.path.join(folder_path, f"win_{context_window}", f"thought_interaction_mat_mean_topk_attn_scores.npy"), \
                         result.dict_result_all_context_windows[context_window]['mean_top_k_scores'])
-
-            # for layer in thought_interaction_matrix_mean_attn_scores.keys():
-            #     for head in thought_interaction_matrix_mean_attn_scores[layer].keys():
-            #         plt.figure(figsize=(10, 6))
-            #         plt.subplot(1, 1, 1)
-            #         plt.imshow(thought_interaction_matrix_mean_attn_scores[layer][head], cmap='viridis')
-            #         plt.colorbar(label='Mean Attention Score')
-            #         plt.title(f'Thought Interactions - Layer {layer}, Head {head}')
-            #         plt.ylabel('Current Thought Index')
-            #         plt.xlabel('Previous Thought Index')
                     
-            #         # Use actual thought indices as ticks
-            #         plt.xticks(range(thought_interaction_matrix_mean_attn_scores[layer][head].shape[0]), range(thought_interaction_matrix_mean_attn_scores[layer][head].shape[0]))
-            #         plt.yticks(range(thought_interaction_matrix_mean_attn_scores[layer][head].shape[0]), range(thought_interaction_matrix_mean_attn_scores[layer][head].shape[0]))
-            #         # plt.tight_layout()
+                    means, stds = process_and_save_mean_std(data=result.dict_result_all_context_windows[context_window]['mean_all_scores'])
+                    means_topk, stds_topk = process_and_save_mean_std(data=result.dict_result_all_context_windows[context_window]['mean_top_k_scores'])
+                    
+                    title_mean = f"Thought Interactions TopK Attention Scores Mean along heads -\n{model_name} {dataset_name} {i} Context Window {context_window}"
+                    title_std = f"Thought Interactions TopK Attention Scores Std along heads -\n{model_name} {dataset_name} {i} Context Window {context_window}"
+                    title_mean_topk = f"Thought Interactions Attention Scores Mean along heads -\n{model_name} {dataset_name} {i} Context Window {context_window}"
+                    title_std_topk = f"Thought Interactions Attention Scores Std along heads -\n{model_name} {dataset_name} {i} Context Window {context_window}"
 
-            #         plt.savefig(f"logs/{model_name}_{dataset_name}_{i}_2shot/thought_interaction_matrix_plot_layer{layer}_head{head}.png")
-            #         plt.show()
-            #         plt.close()
+                    visualize_thoughts_interactions(means_topk, title_mean_topk, 
+                                                    os.path.join(folder_path, f"win_{context_window}", f"thought_interaction_mat_mean_topk_attn_scores_mean_along_heads.png"))
+                    visualize_thoughts_interactions(stds_topk, title_std_topk, 
+                                                    os.path.join(folder_path, f"win_{context_window}", f"thought_interaction_mat_mean_topk_attn_scores_std_along_heads.png"))
+                    visualize_thoughts_interactions(means, title_mean,
+                                                    os.path.join(folder_path, f"win_{context_window}", f"thought_interaction_mat_mean_attn_scores_mean_along_heads.png"))
+                    visualize_thoughts_interactions(stds, title_std,
+                                                    os.path.join(folder_path, f"win_{context_window}", f"thought_interaction_mat_mean_attn_scores_std_along_heads.png"))
