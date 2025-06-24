@@ -1,0 +1,14 @@
+auxiliaries/common_slurm_commands.txt
+generated_answers/
+full_sequences/
+attention_matrices/
+logs/
+output2/
+output_fixed_MATH/
+# output/*/win_5
+# output/*/win_10
+# output/*/salient_thoughts.txt
+# output/*/thought_interactions.txt
+output/
+common_slurm_commands.txt
+__pycache__/

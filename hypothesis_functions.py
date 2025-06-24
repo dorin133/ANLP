@@ -88,7 +88,8 @@ def hypothesis_run(model: AutoModelForCausalLM,
                    sequence_path: str, 
                    log_filename_thought_interactions: str, 
                    log_filename_salient_thoughts: str,
-                   context_windows = [-1, 5, 10, 15]
+                   context_windows = [-1, 5, 10, 15],
+                   K=15
                 ):
     """
         Main function to run the hypothesis analysis.
@@ -120,7 +121,8 @@ def hypothesis_run(model: AutoModelForCausalLM,
         print(f"Found {torch.sum(assistant_mask)} tokens after 'assistant'")
 
         text_tokens = text_tokens[-torch.sum(assistant_mask):]
-        thoughts, thoughts_token_map = identify_thoughts(text_tokens, markers=tokenizer.tokenize("\n\n"))
+        thoughts, thoughts_token_map = identify_thoughts(text_tokens, sep_marker=tokenizer.tokenize("\n\n")[0], \
+                                                        start_marker="<think>", end_marker="</think>")
         
         # Compute sizes
         num_i = len(range(3, len(forward_output.attentions), 4))
@@ -156,12 +158,10 @@ def hypothesis_run(model: AutoModelForCausalLM,
 
     original_stdout, log_file = setup_logging(log_filename_thought_interactions)
     
-    thought_interaction_matrix_mean_attn_scores = {i: {j: np.zeros((len(thoughts_token_map), len(thoughts_token_map))) for j in range(forward_output.attentions[0].shape[1])} \
-                                                    for i in range(3, len(forward_output.attentions), 4)}
-    thought_interaction_matrix_mean_topk_attn_scores = {i: {j: np.zeros((len(thoughts_token_map), len(thoughts_token_map))) for j in range(forward_output.attentions[0].shape[1])} \
-                                                    for i in range(3, len(forward_output.attentions), 4)}
     thought_interaction_matrix_mean_attn_scores_array = np.zeros((len(context_windows), num_i, num_j, N, N))
     thought_interaction_matrix_mean_topk_attn_scores_array = np.zeros((len(context_windows), num_i, num_j, N, N))
+    thought_interaction_matrix_topk_attn_scores_array = np.zeros((len(context_windows), num_i, num_j, N, N, K))
+    thought_interaction_matrix_topk_attn_scores_indices_array = np.zeros((len(context_windows), num_i, num_j, N, N, K, 2))
 
     dict_result_all_context_windows = {}
     try:        
@@ -169,6 +169,14 @@ def hypothesis_run(model: AutoModelForCausalLM,
         all_interactions = {context_window: {layer: {head: {} for head in range(forward_output.attentions[layer].shape[1])} for layer in range(3, len(forward_output.attentions), 4)} for context_window in context_windows}  # Initialize the dictionary for all interactions
         # draw stats for each context window
         for context_window_idx, context_window in enumerate(context_windows): 
+            thought_interaction_matrix_mean_attn_scores = {i: {j: np.zeros((len(thoughts_token_map), len(thoughts_token_map))) for j in range(forward_output.attentions[0].shape[1])} \
+                                                            for i in range(3, len(forward_output.attentions), 4)}
+            thought_interaction_matrix_mean_topk_attn_scores = {i: {j: np.zeros((len(thoughts_token_map), len(thoughts_token_map))) for j in range(forward_output.attentions[0].shape[1])} \
+                                                            for i in range(3, len(forward_output.attentions), 4)}
+            thought_interaction_matrix_mean_topk_attn_scores_lists = {i: {j: np.zeros((len(thoughts_token_map), len(thoughts_token_map), K)) for j in range(forward_output.attentions[0].shape[1])} \
+                                                            for i in range(3, len(forward_output.attentions), 4)}
+            thought_interaction_matrix_mean_topk_attn_indices_lists = {i: {j: np.zeros((len(thoughts_token_map), len(thoughts_token_map), K)) for j in range(forward_output.attentions[0].shape[1])} \
+                                                            for i in range(3, len(forward_output.attentions), 4)}
             for layer in range(3, len(forward_output.attentions), 4):
                 for head in range(forward_output.attentions[layer].shape[1]):
                     # Extract the attention matrix for the layer and head
@@ -179,23 +187,31 @@ def hypothesis_run(model: AutoModelForCausalLM,
                             curr_layer_curr_head_attention,
                             thoughts_token_map,
                             thought_idx,
-                            K=15,
+                            K=K,
                             context_window=context_window,
                         )
                         all_interactions[context_window][layer][head][thought_idx] = interactions
                         # Print the interactions for the current thought
-                        print_interactions(thought_idx, interactions, context_window)
+                        print_interactions(thought_idx, interactions, context_window, layer, head)
                     
                     for i in range(len(thoughts_token_map)):
                         for j in range(len(thoughts_token_map)):
                             if i > j:
-                                thought_interaction_matrix_mean_attn_scores[layer][head][i, j] = all_interactions[context_window][layer][head][i][j]['mean_all_scores_mean']
+                                thought_interaction_matrix_mean_topk_attn_scores_lists[layer][head][i, j] = np.array(all_interactions[context_window][layer][head][i][j]['mean_top_k_scores'])
                                 thought_interaction_matrix_mean_topk_attn_scores[layer][head][i, j] = all_interactions[context_window][layer][head][i][j]['mean_top_k_scores_mean']
+                                thought_interaction_matrix_mean_attn_scores[layer][head][i, j] = all_interactions[context_window][layer][head][i][j]['mean_all_scores_mean']
+                                thought_interaction_matrix_mean_topk_attn_indices_lists[layer][head][i, j] = np.array(all_interactions[context_window][layer][head][i][j]['most_common_token_indices'])
+                                
                     thought_interaction_matrix_mean_attn_scores_array[context_window_idx][layer//4, head] = thought_interaction_matrix_mean_attn_scores[layer][head]
                     thought_interaction_matrix_mean_topk_attn_scores_array[context_window_idx][layer//4, head] = thought_interaction_matrix_mean_topk_attn_scores[layer][head]
-
+                    thought_interaction_matrix_topk_attn_scores_array[context_window_idx][layer//4, head] = thought_interaction_matrix_mean_topk_attn_scores_lists[layer][head]
+                    thought_interaction_matrix_topk_attn_scores_indices_array[context_window_idx][layer//4, head] = thought_interaction_matrix_mean_topk_attn_indices_lists[layer][head]
+                    
+            # Store the results for the current context window
             dict_result_all_context_windows[context_window] = {'mean_all_scores': thought_interaction_matrix_mean_attn_scores_array[context_window_idx], \
-                                                            'mean_top_k_scores': thought_interaction_matrix_mean_topk_attn_scores_array[context_window_idx]}
+                                                            'mean_top_k_scores': thought_interaction_matrix_mean_topk_attn_scores_array[context_window_idx],
+                                                            'mean_top_k_scores_lists': thought_interaction_matrix_mean_topk_attn_scores_lists,
+                                                            'mean_top_k_indices_lists': thought_interaction_matrix_mean_topk_attn_indices_lists,}
 
     finally: 
         # Restore original stdout and close log file

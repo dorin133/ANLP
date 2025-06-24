@@ -76,25 +76,25 @@ def visualize_salient_thoughts(data, title, output_dir):
     return visualize_thoughts_analysis(
         data=data,
         title=title,
-        output_dir=output_path,
+        output_path=output_path,
         xlabel="Thoughts",
         ylabel="Attention Heads",
         vmin=0,
         vmax=1)
 
-def visualize_thoughts_interactions(data, title, output_path):
+def visualize_thoughts_interactions(data, title, output_path, vmax=None):
     """Wrapper that prepares path and delegates to core heatmap function."""
     return visualize_thoughts_analysis(
         data=data,
         title=title,
-        output_dir=output_path,
+        output_path=output_path,
         xlabel="Previous Thoughts Index",
         ylabel="Current Thoughts Index",
         vmin=0,
-        vmax=None)
+        vmax=vmax)
 
 
-def visualize_thoughts_analysis(data, title, output_dir, xlabel="Thoughts", ylabel="Attention Heads", vmin=None, vmax=None):
+def visualize_thoughts_analysis(data, title, output_path, xlabel, ylabel, vmin=None, vmax=None):
     """
     Create heatmap visualizations for a single example.
 
@@ -142,11 +142,10 @@ def visualize_thoughts_analysis(data, title, output_dir, xlabel="Thoughts", ylab
         col = i % 2
         fig.delaxes(axes[row, col])
 
-    plt.suptitle(title, fontsize=16, y=0.098)
+    plt.suptitle(title, fontsize=16, y=1.02)
     plt.tight_layout()
 
     # Save the figure
-    output_path = os.path.join(output_dir, f"salient_thoughts.png")
     plt.savefig(output_path, dpi=300, bbox_inches="tight")
     print(f"✅ Saved visualization to {output_path}")
     plt.close(fig)

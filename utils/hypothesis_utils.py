@@ -66,14 +66,24 @@ def extract_assistant_thoughts_with_token_indices(file_path, model_name="Qwen/Qw
     return thoughts_with_indices
 
 
-def identify_thoughts(tokens, markers=None):
+def identify_thoughts(tokens, sep_marker, start_marker="<think>", end_marker="</think>"):
     """
     Group tokens into thought chunks based on markers or sentence boundaries.
     For this example, we'll use periods as thought boundaries.
     """
-    if markers is None:
+    if sep_marker is None:
         # return error
-        return "Error: No markers provided for thought segmentation."
+        return "Error: No separation marker provided for thought segmentation."
+
+    # if start_marker and end_marker are provided, crop the tokens to only include those between the markers
+    if start_marker:
+        start_idx = next((i for i, token in enumerate(tokens) if token == start_marker), None)
+        if start_idx is not None:
+            tokens = tokens[start_idx + 1:]
+    if end_marker:
+        end_idx = next((i for i, token in enumerate(tokens) if token == end_marker), None)
+        if end_idx is not None:
+            tokens = tokens[:end_idx]
 
     thoughts = []
     current_thought = []
@@ -85,7 +95,7 @@ def identify_thoughts(tokens, markers=None):
         current_thought_indices.append(i)
 
         # If token ends with a marker or is a marker, end the current thought
-        if any(token.endswith(m) for m in markers) or token in markers:
+        if token.endswith(sep_marker) or token==sep_marker:
             if current_thought:  # Only add non-empty thoughts
                 thoughts.append(current_thought)
                 thoughts_indices_map.append(current_thought_indices)
@@ -239,41 +249,50 @@ def compute_mean_std(arr: np.ndarray):
     return means, stds
 
 
-def process_and_save_mean_std(path_to_npy: str):
+def process_mean_std(path_to_npy: str = None, data: np.ndarray = None):
     """
     Load a .npy file of shape (n, m, x, y), compute mean and std over axis=1,
     and save the results as separate .npy files.
 
     Parameters:
-        path_to_npy (str): Path to the input .npy file
+        data (np.ndarray): Input array of shape (n, m, x, y)
+        path_to_npy (str): if data is not provided, supplies the path to the .npy file to load.
     """
-    # Load array
-    arr = np.load(path_to_npy)  # shape assumed to be (n, m, x, y)
-
-    # Validate shape
-    if arr.ndim != 4:
-        raise ValueError(f"Expected array of shape (n, m, x, y), got shape {arr.shape}")
+    # If data is provided, use it directly
+    if data is not None:
+        if not isinstance(data, np.ndarray):
+            raise ValueError("Input data must be a numpy ndarray.")
+        # Validate shape
+        if data.ndim != 4:
+            raise ValueError(f"Expected array of shape (n, m, x, y), got shape {data.shape}")
+    else:
+        # If data is not provided, load from the specified path
+        if not os.path.exists(path_to_npy):
+            raise FileNotFoundError(f"File {path_to_npy} does not exist.")
+        data = np.load(path_to_npy)
 
     # Compute mean and std along axis=1
-    means = np.mean(arr, axis=1)
-    stds = np.std(arr, axis=1)
+    means = np.mean(data, axis=1)
+    stds = np.std(data, axis=1)
 
-    # Build output file paths
-    base, _ = os.path.splitext(path_to_npy)
-    mean_path = f"{base}_mean_along_heads.npy"
-    std_path = f"{base}_std_along_heads.npy"
+    # # Build output file paths
+    # base, _ = os.path.splitext(path_to_npy)
+    # mean_path = f"{base}_mean_along_heads.npy"
+    # std_path = f"{base}_std_along_heads.npy"
 
-    # Save results
-    np.save(mean_path, means)
-    np.save(std_path, stds)
+    # # Save results
+    # np.save(mean_path, means)
+    # np.save(std_path, stds)
 
-    print(f"✅ Saved mean to {mean_path}")
-    print(f"✅ Saved std to {std_path}")
+    # print(f"✅ Saved mean to {mean_path}")
+    # print(f"✅ Saved std to {std_path}")
+
+    return means, stds
 
 
 # Function to visually print the interactions comfortably
-def print_interactions(thought_idx, interactions, context_window):
-    print(f"Thought interactions for thought {thought_idx}, and context window {context_window}:")
+def print_interactions(thought_idx, interactions, context_window, layer, head):
+    print(f"Thought interactions for thought {thought_idx}, layer {layer}, head {head}, and context window {context_window}:")
     for i, interaction in interactions.items():
         print(f"Thought {i} with {thought_idx} -")
         print(f"mean_top_k_scores: {interaction['mean_top_k_scores']}")
