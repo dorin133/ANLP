@@ -12,3 +12,5 @@ output_fixed_MATH/
 output/
 common_slurm_commands.txt
 __pycache__/
+utils/compress_saved_outputs.py
+utils/manage_folders.sh

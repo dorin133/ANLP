@@ -7,7 +7,7 @@ from collections import Counter
 import shutil
 from dataclasses import dataclass
 from utils.hypothesis_utils import (
-    identify_assistant_tokens,
+    identify_thinking_tokens,
     identify_thoughts,
     identify_salient_thoughts,
     calculate_thought_interactions,
@@ -77,10 +77,15 @@ class Result:
         salient_thoughts_all_heads_all_layers_array: np.ndarray
             A 3D numpy array containing the salient thoughts for each head and layer.
             (extracted from the )
+        thoughts_token_map_lengths: np.ndarray
+            A np.ndarray 1d array containing the lengths of each thought in the thoughts_token_map.
+            This is useful for understanding the size of each thought in the context of the attention matrices.
     """
     all_interactions: dict
     dict_result_all_context_windows: dict
     salient_thoughts_all_heads_all_layers_array: np.ndarray
+    salient_tokens_all_heads_all_layers_dicts: dict
+    thoughts_token_map_lengths: np.ndarray
     
 
 def hypothesis_run(model: AutoModelForCausalLM, 
@@ -116,40 +121,47 @@ def hypothesis_run(model: AutoModelForCausalLM,
             forward_output = model(tokens, output_attentions=True)
 
         # Identify which tokens are from the assistant
-        assistant_token_id = tokenizer.convert_tokens_to_ids("assistant")
-        assistant_mask = identify_assistant_tokens(tokens, assistant_token_id)
-        print(f"Found {torch.sum(assistant_mask)} tokens after 'assistant'")
+        think_start_token_id = tokenizer.convert_tokens_to_ids("<think>")
+        think_end_token_id = tokenizer.convert_tokens_to_ids("</think>")
+        think_mask = identify_thinking_tokens(tokens, think_start_token_id=think_start_token_id, think_end_token_id=think_end_token_id)
+        print(f"Found {torch.sum(think_mask)} tokens from '<think>' to '</think>'")
 
-        text_tokens = text_tokens[-torch.sum(assistant_mask):]
-        thoughts, thoughts_token_map = identify_thoughts(text_tokens, sep_marker=tokenizer.tokenize("\n\n")[0], \
-                                                        start_marker="<think>", end_marker="</think>")
+        ones_in_mask = (think_mask[0] == 1).nonzero(as_tuple=True)[0]
+        text_tokens = text_tokens[ones_in_mask[0].item(): ones_in_mask[-1].item()+1]
+        thoughts, thoughts_token_map = identify_thoughts(
+                                            text_tokens, 
+                                            sep_marker=tokenizer.tokenize("\n\n")[0], 
+                                        )
         
         # Compute sizes
         num_i = len(range(3, len(forward_output.attentions), 4))
         num_j = forward_output.attentions[0].shape[1]
         N = len(thoughts_token_map)
         salient_thoughts_all_heads_all_layers_array = np.zeros((num_i, num_j, N))
+        salient_tokens_all_heads_all_layers_dicts = {i: {j: {} for j in range(forward_output.attentions[0].shape[1])} \
+                                                            for i in range(3, len(forward_output.attentions), 4)}
+        max_length_thought = min(int(sum([len(thought) for thought in thoughts])/4), 100)
 
         for i in range(3, len(forward_output.attentions), 4):
             print(f"Salient tokens distribution layer {i}")
             for head in range(forward_output.attentions[i].shape[1]):
                 # Extract the attention matrix for the layer and head
-                curr_layer_curr_head_attention = forward_output.attentions[i][0, head]  # Assuming the last layer and head are of interest
+                curr_layer_curr_head_attention = forward_output.attentions[i][0, head]  # Assuming the i-th layer and head are of interest
                 
                 # Example usage of functions
                 # mask out the user's prompt attention and tokens
-                curr_layer_curr_head_attention = curr_layer_curr_head_attention[-torch.sum(assistant_mask):, -torch.sum(assistant_mask):]
-            
+                curr_layer_curr_head_attention = curr_layer_curr_head_attention[-torch.sum(think_mask):, -torch.sum(think_mask):]
+
                 # Calculate token salience (simple example)
                 token_salience = torch.sum(curr_layer_curr_head_attention, axis=0)  # Sum of attention received by each token
                 # normalize the salience scores
                 non_zero_count = (token_salience != 0).sum(dim=0)
                 normalized_token_salience = torch.where(non_zero_count > 0, token_salience / non_zero_count, torch.zeros_like(token_salience))
 
-                max_length_thought = min(max([len(thought) for thought in thoughts]), 100)
-                salient_thoughts = identify_salient_thoughts(normalized_token_salience, thoughts_token_map, max_length_thought, assistant_mask)
+                salient_thoughts, salient_tokens_dict = identify_salient_thoughts(tokens=text_tokens, token_salience_scores=normalized_token_salience, thoughts_token_map=thoughts_token_map, K_salient_tokens=max_length_thought, think_mask=think_mask)
                 salient_thoughts_all_heads_all_layers_array[i//4, head] = salient_thoughts
-                print(f"\thead {head}: {salient_thoughts}")
+                salient_tokens_all_heads_all_layers_dicts[i][head] = salient_tokens_dict
+                # print(f"\thead {head}: {salient_thoughts}")
 
     finally:
         # Restore original stdout and close log file
@@ -160,7 +172,7 @@ def hypothesis_run(model: AutoModelForCausalLM,
     
     thought_interaction_matrix_mean_attn_scores_array = np.zeros((len(context_windows), num_i, num_j, N, N))
     thought_interaction_matrix_mean_topk_attn_scores_array = np.zeros((len(context_windows), num_i, num_j, N, N))
-    thought_interaction_matrix_topk_attn_scores_array = np.zeros((len(context_windows), num_i, num_j, N, N, K))
+    # thought_interaction_matrix_topk_attn_scores_array = np.zeros((len(context_windows), num_i, num_j, N, N, K))
     thought_interaction_matrix_topk_attn_scores_indices_array = np.zeros((len(context_windows), num_i, num_j, N, N, K, 2))
 
     dict_result_all_context_windows = {}
@@ -173,11 +185,9 @@ def hypothesis_run(model: AutoModelForCausalLM,
                                                             for i in range(3, len(forward_output.attentions), 4)}
             thought_interaction_matrix_mean_topk_attn_scores = {i: {j: np.zeros((len(thoughts_token_map), len(thoughts_token_map))) for j in range(forward_output.attentions[0].shape[1])} \
                                                             for i in range(3, len(forward_output.attentions), 4)}
-            thought_interaction_matrix_mean_topk_attn_scores_lists = {i: {j: np.zeros((len(thoughts_token_map), len(thoughts_token_map), K)) for j in range(forward_output.attentions[0].shape[1])} \
-                                                            for i in range(3, len(forward_output.attentions), 4)}
-            thought_interaction_matrix_mean_topk_attn_indices_lists = {i: {j: np.zeros((len(thoughts_token_map), len(thoughts_token_map), K)) for j in range(forward_output.attentions[0].shape[1])} \
-                                                            for i in range(3, len(forward_output.attentions), 4)}
+
             for layer in range(3, len(forward_output.attentions), 4):
+                print(f"Processing layer {layer} with context window {context_window}")
                 for head in range(forward_output.attentions[layer].shape[1]):
                     # Extract the attention matrix for the layer and head
                     curr_layer_curr_head_attention = forward_output.attentions[layer][0, head]
@@ -192,26 +202,27 @@ def hypothesis_run(model: AutoModelForCausalLM,
                         )
                         all_interactions[context_window][layer][head][thought_idx] = interactions
                         # Print the interactions for the current thought
-                        print_interactions(thought_idx, interactions, context_window, layer, head)
+                        # print_interactions(thought_idx, interactions, context_window, layer, head)
                     
                     for i in range(len(thoughts_token_map)):
                         for j in range(len(thoughts_token_map)):
                             if i > j:
-                                thought_interaction_matrix_mean_topk_attn_scores_lists[layer][head][i, j] = np.array(all_interactions[context_window][layer][head][i][j]['mean_top_k_scores'])
+                                # thought_interaction_matrix_mean_topk_attn_scores_lists[layer][head][i, j] = np.array(all_interactions[context_window][layer][head][i][j]['mean_top_k_scores'])
                                 thought_interaction_matrix_mean_topk_attn_scores[layer][head][i, j] = all_interactions[context_window][layer][head][i][j]['mean_top_k_scores_mean']
                                 thought_interaction_matrix_mean_attn_scores[layer][head][i, j] = all_interactions[context_window][layer][head][i][j]['mean_all_scores_mean']
-                                thought_interaction_matrix_mean_topk_attn_indices_lists[layer][head][i, j] = np.array(all_interactions[context_window][layer][head][i][j]['most_common_token_indices'])
                                 
                     thought_interaction_matrix_mean_attn_scores_array[context_window_idx][layer//4, head] = thought_interaction_matrix_mean_attn_scores[layer][head]
                     thought_interaction_matrix_mean_topk_attn_scores_array[context_window_idx][layer//4, head] = thought_interaction_matrix_mean_topk_attn_scores[layer][head]
-                    thought_interaction_matrix_topk_attn_scores_array[context_window_idx][layer//4, head] = thought_interaction_matrix_mean_topk_attn_scores_lists[layer][head]
-                    thought_interaction_matrix_topk_attn_scores_indices_array[context_window_idx][layer//4, head] = thought_interaction_matrix_mean_topk_attn_indices_lists[layer][head]
                     
             # Store the results for the current context window
             dict_result_all_context_windows[context_window] = {'mean_all_scores': thought_interaction_matrix_mean_attn_scores_array[context_window_idx], \
                                                             'mean_top_k_scores': thought_interaction_matrix_mean_topk_attn_scores_array[context_window_idx],
-                                                            'mean_top_k_scores_lists': thought_interaction_matrix_mean_topk_attn_scores_lists,
-                                                            'mean_top_k_indices_lists': thought_interaction_matrix_mean_topk_attn_indices_lists,}
+                                                            # 'mean_top_k_scores_lists': thought_interaction_matrix_topk_attn_scores_array[context_window_idx],
+                                                            'mean_top_k_indices_lists': all_interactions[context_window]
+                                                        }
+        # create a list of length of the thoughts_token_map of each thought inside the list
+        thoughts_token_map_lengths = np.array([len(thoughts_token_map[thought_idx]) for thought_idx in range(len(thoughts_token_map))])
+        
 
     finally: 
         # Restore original stdout and close log file
@@ -221,7 +232,9 @@ def hypothesis_run(model: AutoModelForCausalLM,
     return Result(
             all_interactions=all_interactions,
             dict_result_all_context_windows=dict_result_all_context_windows,
-            salient_thoughts_all_heads_all_layers_array=salient_thoughts_all_heads_all_layers_array
+            salient_thoughts_all_heads_all_layers_array=salient_thoughts_all_heads_all_layers_array,
+            salient_tokens_all_heads_all_layers_dicts=salient_tokens_all_heads_all_layers_dicts,
+            thoughts_token_map_lengths=thoughts_token_map_lengths
         )
             
 

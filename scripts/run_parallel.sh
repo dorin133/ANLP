@@ -2,11 +2,12 @@
 # filepath: /home/dshteyma/experiment_code4/ANLP/scripts/run_parallel.sh
 
 # Set default values
-MAX_NEW_TOKENS=2048
+MAX_NEW_TOKENS=2560
 OUTPUT_DIR="/mnt/beegfs/mixed-tier/work/dshteyma/output4"
 CONTEXT_WINDOWS="[-1, 3, 6]"
 NUM_PARALLEL_RUNS=1  # Default to 1
-DATASET_NAME="math-algebra"  # Default dataset
+# DATASET_NAME="math-algebra"  # Default dataset
+DATASET_NAME="aime2024"  # Default dataset
 MODEL_NAME="Qwen3"  # Default model
 
 # Parse command line arguments
@@ -49,11 +50,12 @@ mkdir -p "$OUTPUT_DIR"
 # Run parallel instances using SLURM
 for i in $(seq 0 $((NUM_PARALLEL_RUNS-1))); do
   # Calculate the starting index for this run
-  start_idx=$((i+26))
+  start_idx=$((i+2))
   
   # Create the sample_indices list for this run
-  sample_indices="[${start_idx},$((start_idx+1)),$((start_idx+2)),$((start_idx+3))]"
-  # sample_indices="[${start_idx},$((start_idx+1)),$((start_idx+2)),$((start_idx+3))]"
+  # sample_indices="[${start_idx},$((start_idx+1)),$((start_idx+2)),$((start_idx+3)),$((start_idx+4)),$((start_idx+5)),$((start_idx+6)),$((start_idx+7))]"
+  # sample_indices="[${start_idx},$((start_idx+1)),$((start_idx+2))]"
+  sample_indices="[${start_idx}]"
   
   echo "Starting run $i with sample_indices $sample_indices for dataset $DATASET_NAME using model $MODEL_NAME"
   

@@ -19,7 +19,7 @@ parser = argparse.ArgumentParser(description="Run the model with specified param
 parser.add_argument(
     "--max_new_tokens", 
     type=int, 
-    default=128, 
+    default=512, 
     help="Maximum number of new tokens to generate."
 )
 parser.add_argument(
@@ -92,28 +92,28 @@ hendrycks_math_names = [
 
 datasets = {
     # "gsm8k": load_dataset("openai/gsm8k", "main", split="test"),
-        "math-algebra": {
-            "dataset": load_dataset(
-                "EleutherAI/hendrycks_math", 
-                hendrycks_math_names[0], 
-                split="test[:100]", 
-                trust_remote_code=True
-            ).shuffle(seed=42).select(args.sample_indices),  # Select specific sample by index
-            "config": "0-shot"
-        },
-        # "aime2024": {
-        #     "dataset": concatenate_datasets(
-        #         [
-        #             load_dataset
-        #             (
-        #                 "Maxwell-Jia/AIME_2024",
-        #                 split="train",
-        #                 trust_remote_code=True
-        #             )
-        #         ]
-        #     ).shuffle(seed=42).select(args.sample_indices),
+        # "math-algebra": {
+        #     "dataset": load_dataset(
+        #         "EleutherAI/hendrycks_math", 
+        #         hendrycks_math_names[0], 
+        #         split="test[:100]", 
+        #         trust_remote_code=True
+        #     ).shuffle(seed=42).select(args.sample_indices),  # Select specific sample by index
         #     "config": "0-shot"
         # },
+        "aime2024": {
+            "dataset": concatenate_datasets(
+                [
+                    load_dataset
+                    (
+                        "Maxwell-Jia/AIME_2024",
+                        split="train",
+                        trust_remote_code=True
+                    )
+                ]
+            ).shuffle(seed=42).select(args.sample_indices),
+            "config": "0-shot"
+        },
 }
 
 # Check if the specified dataset exists
@@ -161,17 +161,16 @@ def prepare_prompt(example, dataset_name, shot_examples=None):
 print(f"Loading {args.model_name}...")
 tokenizer = AutoTokenizer.from_pretrained(selected_model[args.model_name], trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained(
-                                            selected_model[args.model_name], 
-                                            # output_attentions=True, 
-                                            # return_dict_in_generate=True,
-                                            trust_remote_code=True,
-                                            torch_dtype="auto",
-                                            device_map="auto",
-                                            # low_cpu_mem_usage=True,
-                                            attn_implementation="eager" 
-                                        )
+                            selected_model[args.model_name], 
+                            # output_attentions=True, 
+                            # return_dict_in_generate=True,
+                            trust_remote_code=True,
+                            torch_dtype="auto",
+                            device_map="auto",
+                            # low_cpu_mem_usage=True,
+                            attn_implementation="eager" 
+                        )
 model.eval()
-
 
 print(f"Evaluating on {args.dataset_name}...")
 config = dataset.get("config", None)
@@ -249,7 +248,19 @@ for i, example in zip(args.sample_indices, dataset['dataset']):
         
     # Save the salient thoughts (this result is independent of the context windows)
     np.save(os.path.join(folder_path, f"salient_thoughts.npy"), result.salient_thoughts_all_heads_all_layers_array)
+    # Save the dictionary of the salient tokens details in result.salient_tokens_all_heads_all_layers_dicts
     
+    #convert result.salient_tokens_all_heads_all_layers_dicts to numpy and save it as numpy array
+    salient_tokens_all_heads_all_layers_dicts_array = np.array(result.salient_tokens_all_heads_all_layers_dicts)
+    # Save the salient tokens as a numpy array
+    np.save(os.path.join(folder_path, f"salient_tokens_dict.npy"), salient_tokens_all_heads_all_layers_dicts_array)
+    # # Uncomment to save the salient tokens as a json file
+    # with open(os.path.join(folder_path, f"salient_tokens_dict.json"), 'w', encoding="utf-8") as f:
+    #     json.dump(result.salient_tokens_all_heads_all_layers_dicts, f, indent=4)
+    
+    # Save the thoughts token map lengths (as numpy)
+    np.save(os.path.join(folder_path, f"thoughts_token_map_lengths.npy"), result.thoughts_token_map_lengths)
+
     # initialize a dictionary of the means for all context windows:
     means_all_context_windows = {context_window: None for context_window in args.context_windows}
     stds_all_context_windows = {context_window: None for context_window in args.context_windows}
@@ -264,6 +275,12 @@ for i, example in zip(args.sample_indices, dataset['dataset']):
             result.dict_result_all_context_windows[context_window]['mean_all_scores'])
         np.save(os.path.join(folder_path, f"win_{context_window}", f"thought_interaction_mat_mean_topk_attn_scores.npy"), \
             result.dict_result_all_context_windows[context_window]['mean_top_k_scores'])
+        # save result.dict_result_all_context_windows[context_window]['mean_top_k_indices_lists'] as numpy array
+        thought_interaction_mat_mean_topk_indices_array = np.array(result.dict_result_all_context_windows[context_window]['mean_top_k_indices_lists'])
+        np.save(os.path.join(folder_path, f"win_{context_window}", f"thought_interaction_mat_mean_topk_indices.npy"), thought_interaction_mat_mean_topk_indices_array)
+        # # Uncomment to save in json os.path.join(folder_path, f"win_{context_window}", f"thought_interaction_mat_mean_topk_indices.json")
+        # with open(os.path.join(folder_path, f"win_{context_window}", f"thought_interaction_mat_mean_topk_indices.json"), 'w', encoding="utf-8") as f:
+        #     json.dump(result.dict_result_all_context_windows[context_window]['mean_top_k_indices_lists'], f, indent=4)
 
         means_all_context_windows[context_window], stds_all_context_windows[context_window] = process_mean_std(data=result.dict_result_all_context_windows[context_window]['mean_all_scores'])
         means_top_k_all_context_windows[context_window], stds_top_k_all_context_windows[context_window] = process_mean_std(data=result.dict_result_all_context_windows[context_window]['mean_top_k_scores'])

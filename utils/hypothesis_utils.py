@@ -65,8 +65,7 @@ def extract_assistant_thoughts_with_token_indices(file_path, model_name="Qwen/Qw
 
     return thoughts_with_indices
 
-
-def identify_thoughts(tokens, sep_marker, start_marker="<think>", end_marker="</think>"):
+def identify_thoughts(tokens, sep_marker):
     """
     Group tokens into thought chunks based on markers or sentence boundaries.
     For this example, we'll use periods as thought boundaries.
@@ -74,16 +73,6 @@ def identify_thoughts(tokens, sep_marker, start_marker="<think>", end_marker="</
     if sep_marker is None:
         # return error
         return "Error: No separation marker provided for thought segmentation."
-
-    # if start_marker and end_marker are provided, crop the tokens to only include those between the markers
-    if start_marker:
-        start_idx = next((i for i, token in enumerate(tokens) if token == start_marker), None)
-        if start_idx is not None:
-            tokens = tokens[start_idx + 1:]
-    if end_marker:
-        end_idx = next((i for i, token in enumerate(tokens) if token == end_marker), None)
-        if end_idx is not None:
-            tokens = tokens[:end_idx]
 
     thoughts = []
     current_thought = []
@@ -109,30 +98,39 @@ def identify_thoughts(tokens, sep_marker, start_marker="<think>", end_marker="</
     
     return thoughts, thoughts_indices_map
 
-def identify_assistant_tokens(tokens, assistant_token_id):
+def identify_thinking_tokens(tokens, think_start_token_id, think_end_token_id):
     """
-    Identifies which tokens appear after the word 'assistant' in a sequence.
-    
+    Identifies which tokens appear after the <think> marker in a sequence.
+
     Args:
         tokens (list): A list of token strings.
-        assistant_token_id (int): The token ID to identify the boundary. Default is 'assistant'.
+        think_start_token_id (int): The token ID to identify the start boundary. 
+        think_end_token_id (int): The token ID to identify the end boundary. 
+
     Returns:
-        list: A boolean mask where True indicates tokens after 'assistant',
-              and False indicates tokens before or including 'assistant'.
+        list: A boolean mask where True indicates tokens after '<think>',
+              and False indicates tokens before or including '<think>'.
     """
-    assistant_mask = torch.ones_like(tokens).to('cuda:0')
+    think_mask = torch.ones_like(tokens).to('cuda:0')
 
-    # Find the index of 'assistant' token
-    assistant_idx = -1
-    assistant_tokens = (tokens == assistant_token_id).nonzero()
-    
-    # If 'assistant' is found, mark all subsequent tokens as True
-    if assistant_tokens.numel() > 0:
-        assistant_idx = assistant_tokens[0, 1].item()
-        # Mark all tokens before assistant_idx as masked (FALSE==0)
-        assistant_mask[:, :assistant_idx+1] = 0
+    # Find the index of '<think>' token
+    think_start_idx = -1
+    think_end_idx = -1
+    think_start_tokens = (tokens == think_start_token_id).nonzero()
+    think_end_tokens = (tokens == think_end_token_id).nonzero()
 
-    return assistant_mask
+    # If '<think>' is found, mark all subsequent tokens as True, if '</think>' is found, mark all tokens after it as False
+    if think_start_tokens.numel() > 0:
+        think_start_idx = think_start_tokens[0, 1].item()
+        # Mark all tokens before think_start_idx as masked (FALSE==0)
+        think_mask[:, :think_start_idx+1] = 0
+
+    if think_end_tokens.numel() > 0:
+        think_end_idx = think_end_tokens[0, 1].item()
+        # Mark all tokens after think_end_idx as masked (FALSE==0)
+        think_mask[:, think_end_idx:] = 0
+
+    return think_mask
 
 def calculate_thought_interactions(attention_matrix, thoughts_token_map, current_thought_idx, K, context_window=-1):
     """
@@ -218,7 +216,7 @@ def calculate_thought_interactions(attention_matrix, thoughts_token_map, current
             list_of_mean_scores_for_current_thought.append(current_token_mean_all)
             list_of_indices_top_k_tokens_for_current_thought.append(current_token_indices_top_k_list)
 
-        mean_top_k_for_prev_thought = torch.mean(torch.tensor(list_of_top_k_vectors_for_current_thought), axis=0).tolist()
+        # mean_top_k_for_prev_thought = torch.mean(torch.tensor(list_of_top_k_vectors_for_current_thought), axis=0).tolist()
         top_k_mean_val_for_prev_thought = torch.mean(torch.tensor(list_of_top_k_vectors_for_current_thought)).item()
         mean_all_for_prev_thought = torch.mean(torch.tensor(list_of_mean_scores_for_current_thought)).item()
         flat_list_of_indices_top_k_tokens_for_current_thought = [idx for sublist in list_of_indices_top_k_tokens_for_current_thought for idx in sublist]
@@ -226,10 +224,10 @@ def calculate_thought_interactions(attention_matrix, thoughts_token_map, current
         most_common_token_indices_for_prev_thought = counts.most_common(K)
 
         interaction_results[prev_thought_idx] = {
-            'mean_top_k_scores': mean_top_k_for_prev_thought,
+            # 'mean_top_k_scores': mean_top_k_for_prev_thought,
             'mean_top_k_scores_mean': top_k_mean_val_for_prev_thought,
             'mean_all_scores_mean': mean_all_for_prev_thought,
-            'most_common_token_indices': most_common_token_indices_for_prev_thought
+            'most_common_token_indices': most_common_token_indices_for_prev_thought,
         }
     return interaction_results
 
@@ -300,8 +298,13 @@ def print_interactions(thought_idx, interactions, context_window, layer, head):
         print(f"mean_all_scores_mean: {interaction['mean_all_scores_mean']}")
         print(f"most_common_token_indices: {interaction['most_common_token_indices']} \n")
 
-def identify_salient_thoughts(token_salience_scores, thoughts_token_map, K_salient_tokens, 
-                             assistant_mask=None):
+def identify_salient_thoughts(
+                            tokens,
+                            token_salience_scores, 
+                            thoughts_token_map, 
+                            K_salient_tokens=100, 
+                            think_mask=None
+                    ):
     """
     Identifies thought-steps with the highest amount of salient tokens.
 
@@ -309,14 +312,15 @@ def identify_salient_thoughts(token_salience_scores, thoughts_token_map, K_salie
     A histogram is built to count how many of these globally salient tokens fall into each thought.
 
     Args:
+        tokens (list): A list of token strings representing the entire sequence of the thoughts.
         token_salience_scores (np.ndarray or list): A 1D array or list of salience scores
                                                     for every token in the entire sequence.
         thoughts_token_map (list of list of int): A list where each inner list contains the
                                                  global token indices for a specific thought.
         K_salient_tokens (int): The number of globally top salient tokens to consider.
-        assistant_mask (list of bool, optional): A boolean mask where True indicates tokens after 
-                                                'assistant', and False indicates tokens before or 
-                                                including 'assistant'. If provided, only tokens 
+        think_mask (list of bool, optional): A boolean mask where True indicates tokens after
+                                                '<think>', and False indicates tokens before it, or
+                                                after '</think>'. If provided, only tokens
                                                 marked as True will be considered for salience.
 
     Returns:
@@ -326,21 +330,23 @@ def identify_salient_thoughts(token_salience_scores, thoughts_token_map, K_salie
     """
 
 
-    # # If assistant_mask is provided, zero out the salience scores for tokens before 'assistant'
-    # if assistant_mask is not None:
+    # # If think_mask is provided, zero out the salience scores for tokens before 'think'
+    # if think_mask is not None:
     #     modified_salience_scores = salience_scores_np.copy()
-    #     for i in range(len(assistant_mask)):
-    #         if not assistant_mask[i]:
+    #     for i in range(len(think_mask)):
+    #         if not think_mask[i]:
     #             modified_salience_scores[i] = 0.0
     #     salience_scores_np = modified_salience_scores
     thoughts_combined_length = sum([len(thought) for thought in thoughts_token_map])
     if thoughts_combined_length == 0:
         print("Error: One or more thoughts have no tokens.")
         return []
-    actual_K_salient = min(K_salient_tokens, thoughts_combined_length)
-    
-    indices_of_top_k_salient_tokens = torch.argsort(token_salience_scores, dim=-1, descending=False)[-actual_K_salient:].to('cpu').numpy()
-    
+
+    indices_of_top_k_salient_tokens = torch.argsort(token_salience_scores, dim=-1, descending=True)[:K_salient_tokens].to('cpu').numpy()
+    # get the tokens in the indices of the top K salient tokens
+    topk_salient_tokens = np.array(tokens)[indices_of_top_k_salient_tokens]
+    salient_tokens_dict = {int(token_index): {"token": str(token), "attention_score" : token_salience_scores[token_index].item()} for token_index, token in zip(indices_of_top_k_salient_tokens, topk_salient_tokens)}
+
     salient_tokens_per_thought_histogram = [0] * len(thoughts_token_map)
 
     for i, thought_tokens_indices in enumerate(thoughts_token_map):
@@ -350,9 +356,7 @@ def identify_salient_thoughts(token_salience_scores, thoughts_token_map, K_salie
                 count += 1
         salient_tokens_per_thought_histogram[i] = count
 
-    # divide by the length of the thought
-    salient_tokens_per_thought_histogram = [count / len(thoughts_token_map[i]) for i, count in enumerate(salient_tokens_per_thought_histogram)]
     # normalize the histogram to sum to 1
     salient_tokens_per_thought_histogram = [count / sum(salient_tokens_per_thought_histogram) for count in salient_tokens_per_thought_histogram]
     
-    return salient_tokens_per_thought_histogram
+    return salient_tokens_per_thought_histogram, salient_tokens_dict
