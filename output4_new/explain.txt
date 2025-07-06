@@ -28,8 +28,8 @@ Example:
 5. `salient_thoughts.npy` - NumPy array with shape [num_layers, num_heads, num_thoughts] containing the 
    numerical salience scores for each thought across all attention heads and selected layers.
 
-6. `salient_tokens_dict.npy` - NumPy array containing dictionary data about salient tokens, including 
-   token indices, token text, and salience scores.
+6. `salient_tokens_dict.npy` - NumPy array with shape [num_layers, num_heads, SALIENT_TOKENS_NUM=100, 2] containing dictionary data about salient tokens, including 
+   token indices, token text, and salience scores across the entire output.
 
 7. `thoughts_token_map_lengths.npy` - NumPy array containing the length of each identified thought in tokens,
    useful for understanding the size distribution of thoughts in the reasoning process.
@@ -54,54 +54,3 @@ Example:
 
 3. `thought_interaction_mat_mean_topk_indices.npy` - NumPy array with shape [num_layers, num_heads, num_thoughts, num_prev_thoughts, ] containing indices of the top-K attention
    interactions, identifying which specific token pairs had the strongest interactions.
-
-### Visualizations in Each Context Window Subdirectory
-
-1. `thought_interaction_mat_mean_topk_attn_scores_mean_along_heads.png` - Heatmap visualization showing the
-   mean of top-K attention scores across all attention heads, representing the strongest thought interactions.
-
-2. `thought_interaction_mat_mean_topk_attn_scores_std_along_heads.png` - Heatmap showing the standard deviation
-   of top-K attention scores, indicating variability in attention patterns across heads.
-
-3. `thought_interaction_mat_mean_attn_scores_mean_along_heads.png` - Heatmap of mean attention scores
-   across all attention heads for all thought interactions.
-
-4. `thought_interaction_mat_mean_attn_scores_std_along_heads.png` - Heatmap showing standard deviation of
-   attention scores, representing consistency of attention patterns.
-
-## Understanding the Data
-
-The `hypothesis_run` function returns a `Result` dataclass with five main components:
-
-1. `all_interactions`: Dictionary containing detailed interaction statistics for each thought pair,
-   organized by context window, layer, and head. Contains both mean scores and top-K interaction indices.
-
-2. `dict_result_all_context_windows`: Dictionary containing processed attention score matrices for each
-   context window, with data organized for easy visualization.
-
-3. `salient_thoughts_all_heads_all_layers_array`: 3D array containing salience scores for each thought
-   across all attention heads and layers, showing which thoughts were most important to the model.
-
-4. `salient_tokens_all_heads_all_layers_dicts`: Dictionary mapping specific token information to their
-   salience scores across heads and layers.
-
-5. `thoughts_token_map_lengths`: Array containing the length (in tokens) of each identified thought,
-   providing context for interpreting attention patterns.
-
-## Notes on Context Windows
-
-- Context window `-1` represents global context (all tokens considered)
-- Positive context window values (e.g., 3, 6) represent the number of tokens before and after 
-  the current token to consider when calculating attention statistics
-- Smaller context windows focus on local interactions, while larger ones capture broader patterns
-
-## Visualization Normalization
-
-The script normalizes visualization scales across all context windows by calculating the maximum
-values for means and standard deviations, ensuring consistent color scaling in the heatmaps.
-
-## File Generation Logic
-
-- If files like `full_sequence.txt` already exist, the script will use the existing files rather
-  than regenerating outputs, enabling incremental analysis.
-- Visualization files are always regenerated based on the current run
