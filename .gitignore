@@ -10,6 +10,8 @@ output_fixed_MATH/
 # output/*/salient_thoughts.txt
 # output/*/thought_interactions.txt
 output/
+output4_new/
+temp_extract/
 common_slurm_commands.txt
 __pycache__/
 utils/compress_saved_outputs.py
