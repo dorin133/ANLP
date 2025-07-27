@@ -158,20 +158,6 @@ visualiztions_salient_thoughts/
 
 The visualizations help identify patterns in how different attention heads attend to different thought steps and specific tokens across model layers, enabling deeper understanding of Chain-of-Thought reasoning mechanisms.
 
-## Research Questions Addressed
-
-### Token-Level Analysis
-1. **Token Distribution**: Are salient tokens uniformly distributed within thoughts or concentrated at specific positions (beginnings/endings)?
-2. **Token Types**: Which tokens are consistently salient across examples? (Mathematical operators, logical connectors, etc.)
-3. **Layer Evolution**: How do token attention patterns evolve across different transformer layers?
-4. **Length Bias**: Do longer thoughts appear more important simply because they contain more tokens?
-
-### Thought-Level Analysis  
-1. **Thought Importance**: Which reasoning steps are most critical for the model's final answer?
-2. **Layer Specialization**: Do different layers focus on different types of reasoning steps?
-3. **Head Diversity**: How do different attention heads within the same layer attend to thoughts?
-4. **Dataset Differences**: Do AIME and math-algebra problems show different thought-level patterns?
-
 ## Output Examples
 
 ### Token-Level Heatmaps
