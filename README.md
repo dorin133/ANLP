@@ -3,6 +3,8 @@
 ### Directory Structure
 
 ```
+array_logs/           # Legacy Qwen2.5 analysis results, weren't included in our final project report
+
 output4_new/           # Contains all results produced for our final report analysis by running main.py
 
 visualiztions_salient_thoughts/
