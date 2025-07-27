@@ -26,7 +26,7 @@ Refer to [`utils/visualization_readme.md`](utils/visualization_readme.md) for in
 
 ## Reproducing Final Results
 
-To recreate the experiments and figures in the final report:
+To recreate the experiments and thw raw data used for analysis and figures in the final report:
 
 - For **multi-node GPU execution**:
   ```bash
