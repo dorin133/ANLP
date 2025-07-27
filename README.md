@@ -31,3 +31,7 @@ To recreate the experiments and figures in the final report:
 - For **multi-node GPU execution**:
   ```bash
   scripts/run_parallel.sh
+
+- For **single-node GPU execution**:
+  ```bash
+  scripts/run_main.sh
